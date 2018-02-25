@@ -22,4 +22,6 @@ export class DownloadFileComponent extends Component {
 	  }
 }
 
+
+
 export default DownloadFileComponent;
