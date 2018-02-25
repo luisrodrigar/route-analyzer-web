@@ -8,18 +8,26 @@ class MapRoute extends Component {
 	constructor(props){
 		super(props);
 		this.setLocationRows = this.setLocationRows.bind(this);
+		this.setActivityObject = this.setActivityObject.bind(this);
 		this.setURLDownloadFile = this.setURLDownloadFile.bind(this);
 		this.state = {activity: {}};
-		if(this.props.id){
-			get(this.props.id)
+		this.setActivityObject(this.props.id);
+	}
+
+	componentWillReceiveProps(nextProps){
+		if(nextProps.id != this.props.id){
+			this.setActivityObject(nextProps.id);
+	    }
+	}
+
+	setActivityObject(id){
+		get(id)
 				.then( activityObject => {
 					this.setState({activity: activityObject});
 				})
 				.catch( err => {
 					alert(err.message);
 				});
-	    }
-		
 	}
 
 	setLocationRows(){
