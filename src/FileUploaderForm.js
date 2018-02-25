@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import File from './Services/File';
+import {upload} from './Services/file';
 import './FileUploaderForm.css';
 
 
@@ -16,11 +16,15 @@ class FileUploaderForm extends Component {
     formData.append("name", "name de ejemplo");
     formData.append('file', this.fileInput.files[0]);
     formData.append('type', this.type.value);
-    try{
-      this.props.showMapRoute(File.uploadFile(formData));
-    } catch (exception){
-      alert(exception.message);
-    }
+    
+    upload(formData)
+      .then(idActivity => {
+        this.props.showMapRoute(idActivity);
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+
   };
 
   render() {

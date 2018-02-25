@@ -3,5 +3,4 @@ export function Exception(message) {
    this.name = "FileException";
 }
 
-
 export default Exception;

@@ -1,15 +1,80 @@
 import React, { Component } from 'react';
-import Exception from './Exception'
-import Activity from './Services/Activity'
-import DownloadFileComponent from './Components/DownloadFileComponent'
-import axios from 'axios';
+import {get} from './Services/activity';
+import DownloadFileComponent from './Components/DownloadFileComponent';
 import './MapRoute.css';
 
-class LapRow extends Component{
+class MapRoute extends Component {
+
 	constructor(props){
 		super(props);
+		this.setLocationRows = this.setLocationRows.bind(this);
+		this.setURLDownloadFile = this.setURLDownloadFile.bind(this);
+		this.state = {activity: {}};
+		if(this.props.id){
+			get(this.props.id)
+				.then( activityObject => {
+					this.setState({activity: activityObject});
+				})
+				.catch( err => {
+					alert(err.message);
+				});
+	    }
+		
 	}
 
+	setLocationRows(){
+		this.rows = [];
+		this.state.activity.laps.forEach(lap=>{
+	      		this.rows.push(<LapRow key={lap.index} value={lap.startTime ? lap.startTime : lap.index}/>);
+				lap.tracks.forEach(track => {
+					this.rows.push(<TrackPointRow key={track.date ? track.date : track.index} 
+						date={track.date} position={track.position} altitudeMeters={track.altitudeMeters}/>);
+				});
+			});
+	}
+
+	setURLDownloadFile(){
+		const host = "http://localhost:8080/RouteAnalyzer";
+		const baseDir = "/file/get";
+		const query = "?id-file=" + this.state.activity.id + "&type=" + this.state.activity.sourceXmlType;
+
+		this.url = host + baseDir + query;
+	}
+
+	render(){
+		if(this.state.activity && this.state.activity.laps){
+			this.setURLDownloadFile();
+			this.setLocationRows();
+			
+			return (
+				<div>
+					<DownloadFileComponent url={this.url} />
+					<table>
+						<thead>
+							<tr>
+								<td>Time</td>
+								<td>Longitude</td>
+								<td>Latitude</td>
+								<td>Altitude</td>
+							</tr>
+						</thead>
+						<tbody>
+							{this.rows}
+						</tbody>
+					</table>
+				</div>
+			);
+		} else
+			return(
+				<div>
+					
+				</div>
+			);
+	}
+
+}
+
+class LapRow extends Component{
 	render(){
 		return(
 			<tr>
@@ -20,10 +85,6 @@ class LapRow extends Component{
 }
 
 class TrackPointRow extends Component{
-	constructor(props){
-		super(props);
-	}
-
 	render(){
 		return(
 			<tr>
@@ -34,66 +95,6 @@ class TrackPointRow extends Component{
 			</tr>
 		);
 	}
-}
-
-
-class MapRoute extends Component {
-
-	constructor(props){
-		super(props);
-		this.state = {activity:{}}
-	}
-
-	setLocationRows(){
-		this.state.activity.laps.forEach(lap=>{
-	      		this.rows.push(<LapRow key={lap.index} value={lap.startTime ? lap.startTime : lap.index}/>);
-				lap.tracks.forEach(track => {
-					this.rows.push(<TrackPointRow key={track.date ? track.date : track.index} 
-						date={track.date} position={track.position} altitudeMeters={track.altitudeMeters}/>);
-				});
-			});
-	}
-
-	render(){
-		const host = "http:\/\/localhost:8080\/RouteAnalyzer";
-		const baseDir = "\/file\/get";
-		const query = "?" + "id-file=" + this.state.activity.id + "&type=" + this.state.activity.sourceXmlType;
-		this.url = host + baseDir + query;
-
-		this.rows = [];
-
-		if(this.props.id){
-			try{
-				this.setState({activity: File.getActivity(this.props.id)});
-			}catch(exception){
-				alert(exception.message);
-			}
-	    }
-		
-		if(this.state.activity.laps){
-	      	this.setLocationRows();
-		}
-		
-		return (
-		<div>
-			<DownloadFileComponent url={this.url} />
-			<table>
-				<thead>
-					<tr>
-						<td>TIME</td>
-						<td>LONGITUD</td>
-						<td>LATITUD</td>
-						<td>ALTITUD</td>
-					</tr>
-				</thead>
-				<tbody>
-					{this.rows}
-				</tbody>
-			</table>
-		</div>
-		);
-	}
-
 }
 
 export default MapRoute;

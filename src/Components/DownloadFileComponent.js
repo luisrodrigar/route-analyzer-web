@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-export class DownloadFileComponent extends React.Component {
+import React, {Component} from 'react';
+
+export class DownloadFileComponent extends Component {
 
 	constructor(props){
 	    super(props);
