@@ -9,7 +9,6 @@ class MapRoute extends Component {
 		super(props);
 		this.setLocationRows = this.setLocationRows.bind(this);
 		this.setActivityObject = this.setActivityObject.bind(this);
-		this.setURLDownloadFile = this.setURLDownloadFile.bind(this);
 		this.state = {activity: {}};
 		this.setActivityObject(this.props.id);
 	}
@@ -41,22 +40,13 @@ class MapRoute extends Component {
 			});
 	}
 
-	setURLDownloadFile(){
-		const host = "http://localhost:8080/RouteAnalyzer";
-		const baseDir = "/file/get";
-		const query = "?id-file=" + this.state.activity.id + "&type=" + this.state.activity.sourceXmlType;
-
-		this.url = host + baseDir + query;
-	}
-
 	render(){
 		if(this.state.activity && this.state.activity.laps){
-			this.setURLDownloadFile();
 			this.setLocationRows();
 			
 			return (
 				<div>
-					<DownloadFileComponent url={this.url} />
+					<DownloadFileComponent id={this.state.activity.id} type={this.state.activity.sourceXmlType} />
 					<table>
 						<thead>
 							<tr>

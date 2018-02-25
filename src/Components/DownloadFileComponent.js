@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {get} from '../Services/file';
+import FileDownload from 'js-file-download';
 
 export class DownloadFileComponent extends Component {
 
@@ -7,19 +9,21 @@ export class DownloadFileComponent extends Component {
 	    this.download = this.download.bind(this);
   	}
 
-	download = function() {
-	    setTimeout(() => {
-	      const response = {
-	        file:this.props.url,
-	      };
-	      window.open(response.file);
-	    }, 100);
+	download() {
+		get(this.props.id, this.props.type)
+			.then(response => {
+				FileDownload(response, this.props.id + "_" + this.props.type + '.xml');
+			})
+			.catch(err =>{
+				alert(err.message);
+			});
   	}
-	  render() {
-	    return(
-	      <button onClick={this.download}>Download file </button>
-	    );
-	  }
+  	
+	render() {
+	   	return(
+	   		<button onClick={this.download}>Download file </button>
+	 	);
+	}
 }
 
 

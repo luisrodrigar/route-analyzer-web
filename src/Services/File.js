@@ -10,3 +10,13 @@ export function upload(formData) {
         throw new Exception(err.response.data.description);
       });
 }
+
+export function get(id, type) {
+   const path = "http://localhost:8080/RouteAnalyzer/file/get/"+type+"/"+id;
+    return axios
+      .get(path)
+      .then(res => res.data)
+      .catch(err => {
+        throw new Exception(err.response.data.description);
+      });
+}
