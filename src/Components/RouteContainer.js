@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {get} from './Services/activity';
-import DownloadFileComponent from './Components/DownloadFileComponent';
-import {RouteMapContainer} from './Components/RouteMapContainer';
-import './MapRoute.css';
+import {get} from '../Services/activity';
+import DownloadFileComponent from './DownloadFileComponent';
+import {RouteMapContainer} from './RouteMapContainer';
+import './RouteContainer.css';
 
-class MapRoute extends Component {
+class RouteContainer extends Component {
 
 	constructor(props){
 		super(props);
@@ -101,4 +101,4 @@ class TrackPointRow extends Component{
 	}
 }
 
-export default MapRoute;
+export default RouteContainer;

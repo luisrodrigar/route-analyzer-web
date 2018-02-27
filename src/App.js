@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import FileUploaderForm from './FileUploaderForm';
-import MapRoute from './MapRoute';
+import {BrowserRouter as Router } from 'react-router-dom'
+import FileUploaderContainer from './Components/FileUploaderContainer';
+import RouteContainer from './Components/RouteContainer';
 import './App.css';
 
 class App extends Component {
@@ -20,16 +21,18 @@ class App extends Component {
 
   render() {
     return (
+      <Router>
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Route Analyzer</h1>
         </header>
         <div className="App-intro">
-          <FileUploaderForm showMapRoute={this.showMapRoute}/>
-          {this.state.showMap && <MapRoute id={this.state.id}/>}
+          <FileUploaderContainer showMapRoute={this.showMapRoute}/>
+          {this.state.showMap && <RouteContainer id={this.state.id}/>}
         </div>
       </div>
+      </Router>
     );
   }
 }

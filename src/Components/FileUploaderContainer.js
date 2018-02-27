@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {upload} from './Services/file';
-import './FileUploaderForm.css';
+import {upload} from '../Services/file';
+import './FileUploaderContainer.css';
 
 
-class FileUploaderForm extends Component {
+class FileUploaderContainer extends Component {
 
   constructor(props){
     super(props);
@@ -29,6 +29,7 @@ class FileUploaderForm extends Component {
 
   render() {
     return (
+      <div className="FileUploaderContainer">
       <form className="FileUploaderForm" onSubmit={this.handleSubmit}>
         <label>
           Type
@@ -42,8 +43,9 @@ class FileUploaderForm extends Component {
           ref={input => { this.fileInput = input; }} />
         <input type="submit" value="Submit" />
       </form>
+      </div>
     );
   }
 }
 
-export default FileUploaderForm;
+export default FileUploaderContainer;

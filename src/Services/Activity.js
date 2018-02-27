@@ -1,5 +1,5 @@
 
-import {Exception} from '../Exception'
+import {Exception} from './Exception'
 import axios from 'axios';
 
 export function get(id){
