@@ -31,16 +31,13 @@ class FileUploaderContainer extends Component {
     return (
       <div className="FileUploaderContainer">
       <form className="FileUploaderForm" onSubmit={this.handleSubmit}>
-        <label>
-          Type
-          <select defaultValue="gpx" className="optionFileUploaderForm" ref={option => { this.type = option; }} >
-            <option value='gpx'>GPX</option>
-            <option value='tcx'>TCX</option>
-          </select>
-        </label>
         <input 
           type="file" 
           ref={input => { this.fileInput = input; }} />
+        <select defaultValue="gpx" className="optionFileUploaderForm" ref={option => { this.type = option; }} >
+          <option value='gpx'>gpx</option>
+          <option value='tcx'>tcx</option>
+        </select>
         <input type="submit" value="Submit" />
       </form>
       </div>

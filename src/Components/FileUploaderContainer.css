@@ -1,3 +1,11 @@
 .FileUploaderContainer{
 	padding:15px;
 }
+
+.FileUploaderForm select, .FileUploaderForm input{
+	padding:10px;
+}
+
+.FileUploaderForm input[type="submit"]{
+	padding:10px;
+}

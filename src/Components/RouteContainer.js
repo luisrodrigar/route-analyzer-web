@@ -31,12 +31,12 @@ class RouteContainer extends Component {
 	}
 
 	setLocationRows(){
-		this.rows = [];
+		this.rows = []; 
 		this.state.activity.laps.forEach(lap=>{
-      		this.rows.push(<LapRow key={lap.index} value={lap.startTime ? lap.startTime : lap.index}/>);
+      		this.rows.push(<LapRow key={lap.index} value={lap.startTime ? new Date(lap.startTime).toLocaleDateString() + " " + new Date(lap.startTime).toLocaleTimeString()  : lap.index}/>);
 			lap.tracks.forEach(track => {
-				this.rows.push(<TrackPointRow key={track.date ? track.date : track.index} 
-					date={track.date} position={track.position} altitudeMeters={track.altitudeMeters}/>);
+				this.rows.push(<TrackPointRow key={track.date ? track.date : track.index + "_trackpoint"} 
+					date={track.date ? new Date(track.date).toLocaleTimeString() : ""} position={track.position} altitudeMeters={track.altitudeMeters}/>);
 			});
 		});
 	}
