@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
-import { compose, withProps, lifecycle, withStateHandlers } from "recompose";
+import { compose, withProps, lifecycle } from "recompose";
 import { MarkerClusterer } from "react-google-maps/lib/components/addons/MarkerClusterer";
 
 const RouteMapComponent =  
@@ -11,37 +11,9 @@ const RouteMapComponent =
       containerElement: <div style={{ height: '600px', width: '700px' }} />,
       mapElement: <div style={{ height: '100%' }} />
     }),
-    withStateHandlers(() => (
-          {
-            keys: [],
-          }), 
-          {
-            handleMarkClick: ({keys}) => 
-              (key) => {
-                let index = keys.indexOf(key);
-                if(index===-1){
-                  return ({
-                    keys: [...keys, key]
-                  })
-                } else
-                  return ({
-                      keys: [...keys.slice(0,index),...keys.slice(index+1)]
-                    })
-                
-              }
-            ,handleInfoClose: ({keys}) => 
-              (key) => {
-                let index = keys.indexOf(key);
-                if(index>=0)
-                  return ({
-                      keys: [...keys.slice(0,index),...keys.slice(index+1)]
-                    })
-              }
-          }
-    ),
     lifecycle({
       componentDidUpdate(prevProps, prevState) {
-        if(prevProps.laps !== this.props.laps && this.props.keys.length===0){
+        if(prevProps.laps !== this.props.laps){
           this.props.fitBound(this.props.map);
         }
       }
@@ -70,55 +42,91 @@ const RouteMapComponent =
           />} 
         )
       }
-      <Marker position={props.laps[0].tracks[0].position} 
-              key={0+"_"+0}
-              label={"A"}
-              onClick={()=>props.handleMarkClick(0+"_"+0)}>
-        {props.keys.length > 0 && (props.keys.indexOf(0+"_"+0)!==-1) && 
-          <InfoWindow onCloseClick={()=>props.handleInfoClose(0+"_"+0)}>
-            <InfoViewContent trackPoint={props.laps[0].tracks[0]}/>
-          </InfoWindow>
-        }
-      </Marker>
-      <MarkerClusterer  averageCenter 
-                        gridSize={80} 
-                        minimumClusterSize={12}
-                        >
+      <MarkerInfoViewComponent 
+        trackPoint={props.laps[0].tracks[0]}
+        keyMarker={"0_0"}
+        label={"A"}
+        handleMarkClick={props.handleMarkClick}
+        handleInfoClose={props.handleInfoClose}
+        keys={props.keys}
+      />
+      <PositionNotFirstOrLastMarkerClustererComponent 
+        laps={props.laps} 
+        gridSize={80} 
+        minimumClusterSize={22}
+        handleMarkClick={props.handleMarkClick}
+        handleInfoClose={props.handleInfoClose}
+        keys={props.keys} 
+      />
+      <MarkerInfoViewComponent 
+        trackPoint={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1]}
+        keyMarker={(props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1)}
+        label={"B"}
+        handleMarkClick={props.handleMarkClick}
+        handleInfoClose={props.handleInfoClose}
+        keys={props.keys}
+      />
+    </GoogleMap>
+  );
+
+export class PositionNotFirstOrLastMarkerClustererComponent extends Component{
+
+  isFirstOrEndPosition(indexLap, indexPosition){
+    let lastIndexLap = this.props.laps.length-1;
+    let lastIndexPositionOfLastLap = this.props.laps[lastIndexLap].tracks.length-1;
+    return (indexPosition!==0 || indexLap!==0 ) 
+            && (indexLap !== lastIndexLap 
+                || indexPosition !== lastIndexPositionOfLastLap)
+  }
+
+  render(){
+    return (
+      <MarkerClusterer  
+        averageCenter 
+        gridSize={this.props.gridSize} 
+        minimumClusterSize={this.props.minimumClusterSize}
+      >
       {
-        props.laps.map( (lap, indexLap) => {
+        this.props.laps.map( (lap, indexLap) => {
           return lap.tracks.map( (track, indexPosition) => {
-              return ((indexPosition!==0 || indexLap!==0 ) && (indexLap !== props.laps.length-1 || indexPosition !== props.laps[props.laps.length-1].tracks.length-1)) 
-                    ?
-                        <Marker key={indexLap+"_"+indexPosition} 
-                        position={track.position} 
-                        icon='https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'
-                        onClick={()=>props.handleMarkClick(indexLap+"_"+indexPosition)}
-                        >
-                        {props.keys.length > 0 && props.keys.indexOf(indexLap+"_"+indexPosition)!==-1 && 
-                          <InfoWindow onCloseClick={()=>props.handleInfoClose(indexLap+"_"+indexPosition)}>
-                            <InfoViewContent trackPoint={track}/>
-                          </InfoWindow>
-                        }
-                        </Marker> 
-                    :   null;
+              return ((this.isFirstOrEndPosition(indexLap,indexPosition)) ? 
+                        (<MarkerInfoViewComponent 
+                          trackPoint={track}
+                          key={indexLap+"_"+indexPosition}
+                          keyMarker={indexLap+"_"+indexPosition}
+                          icon={'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'}
+                          handleMarkClick={this.props.handleMarkClick}
+                          handleInfoClose={this.props.handleInfoClose}
+                          keys={this.props.keys}
+                        />)
+                    :   null);
             
           }) 
         })
       }
       </MarkerClusterer>
-      <Marker position={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1].position}
-              key={(props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1)}
-              label={"B"}
-              onClick={()=>props.handleMarkClick((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))}
+    )
+  }
+}
+
+export class MarkerInfoViewComponent extends Component{
+
+  render(){
+    return (
+      <Marker position={this.props.trackPoint.position}
+              onClick={()=>this.props.handleMarkClick(this.props.keyMarker)}
+              icon={this.props.icon}
+              label={this.props.label}
               >
-              {props.keys.length > 0 && (props.keys.indexOf((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))!==-1) &&  
-                <InfoWindow onCloseClick={()=>props.handleInfoClose((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))}>
-                  <InfoViewContent  trackPoint={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1]}/>
+              {this.props.keys.length > 0 && (this.props.keys.indexOf(this.props.keyMarker)!==-1) &&  
+                <InfoWindow onCloseClick={()=>this.props.handleInfoClose(this.props.keyMarker)}>
+                  <InfoViewContent  trackPoint={this.props.trackPoint}/>
                 </InfoWindow>
               }
       </Marker>
-    </GoogleMap>
-  );
+    )
+  }
+}
 
 class InfoViewContent extends Component{
   render(){

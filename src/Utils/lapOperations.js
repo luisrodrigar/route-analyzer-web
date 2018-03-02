@@ -23,7 +23,7 @@ import randomColor from 'randomcolor';
         return {
               index:lap.index,
               tracks:getLapTrackPoint(lap),
-              color:randomColor({luminosity: 'dark'}),
+              color:randomColor(),
               startTime: lap.startTime,
               totalTime: lap.totalTimeSeconds,
               distance: lap.distanceMeters,
