@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 import { compose, withProps, lifecycle, withStateHandlers } from "recompose";
 import { MarkerClusterer } from "react-google-maps/lib/components/addons/MarkerClusterer";
-import randomColor from 'randomcolor'; 
 
 const RouteMapComponent =  
   compose(
@@ -14,60 +13,53 @@ const RouteMapComponent =
     }),
     withStateHandlers(() => (
           {
-            isOpen: false,
             keys: [],
-            lastKey: ""
           }), 
           {
             handleMarkClick: ({keys}) => 
               (key) => {
-                const newKeys = keys;
-                if(keys.indexOf(key)===-1)
-                  newKeys.push(key);
-                return ({
-                  isOpen: true,
-                  keys: newKeys,
-                  lastKey: key
-                })
+                let index = keys.indexOf(key);
+                if(index===-1){
+                  return ({
+                    keys: [...keys, key]
+                  })
+                } else
+                  return ({
+                      keys: [...keys.slice(0,index),...keys.slice(index+1)]
+                    })
+                
               }
             ,handleInfoClose: ({keys}) => 
               (key) => {
-                const newKeys = keys;
-                if(keys.indexOf(key)>=0)
-                  newKeys.splice(keys.indexOf(key),1);
-                return ({
-                  isOpen: (newKeys.length>0),
-                  keys: newKeys
-                })
+                let index = keys.indexOf(key);
+                if(index>=0)
+                  return ({
+                      keys: [...keys.slice(0,index),...keys.slice(index+1)]
+                    })
               }
           }
     ),
     lifecycle({
-      componentWillMount() {
-        this.setState({
-
-          onMapMounted: ref => {
-            this.map = ref;
-          }
-        });
-      },
-      componentDidMount() {
-        //this.map.fitBounds(bounds);
+      componentDidUpdate(prevProps, prevState) {
+        if(prevProps.laps !== this.props.laps && this.props.keys.length===0){
+          this.props.fitBound(this.props.map);
+        }
       }
     }),
     withScriptjs,
     withGoogleMap
   )(props =>
+
     <GoogleMap 
-      ref={props.onMapMounted}
+      ref={props.fitBound}
       defaultZoom={12}
-      center={props.center}
       mapTypeId= {'terrain'}>
       {
-        props.path.map( (lap, index) => {
-          const strokeColor = randomColor({luminosity: 'dark'});
-          return <Polyline key={index} 
-                    path={lap} 
+        props.laps.map( (lap) => {
+          const strokeColor = lap.color;
+          const path = lap.tracks.map((track)=>track.position);
+          return <Polyline key={lap.index} 
+                    path={path} 
                     options={
                       {
                         strokeColor,
@@ -78,53 +70,50 @@ const RouteMapComponent =
           />} 
         )
       }
-      <Marker position={props.path[0][0]} 
+      <Marker position={props.laps[0].tracks[0].position} 
               key={0+"_"+0}
               label={"A"}
               onClick={()=>props.handleMarkClick(0+"_"+0)}>
-        {props.isOpen && (props.keys.indexOf(0+"_"+0)!==-1) && 
+        {props.keys.length > 0 && (props.keys.indexOf(0+"_"+0)!==-1) && 
           <InfoWindow onCloseClick={()=>props.handleInfoClose(0+"_"+0)}>
-            <InfoViewContent lat={props.path[0][0].lat} lng={props.path[0][0].lng}/>
+            <InfoViewContent trackPoint={props.laps[0].tracks[0]}/>
           </InfoWindow>
         }
       </Marker>
       <MarkerClusterer  averageCenter 
                         gridSize={80} 
-                        minimumClusterSize={6}
+                        minimumClusterSize={12}
                         >
       {
-        props.path.map( (lap, indexLap) => {
-          return lap.map( (position, indexPosition) => {
-            if((indexPosition===0 && indexLap===0 ) 
-              || 
-              (indexLap === props.path.length-1 && indexPosition === props.path[props.path.length-1].length-1))
-                return "";
-            const key = indexLap+"_"+indexPosition;
-            return  <Marker key={key} 
-                      position={position} 
-                      icon='https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'
-                      onClick={()=>props.handleMarkClick(key)}
-                      >
-                      {props.isOpen && props.keys.indexOf(key)!==-1 && 
-                        <InfoWindow onCloseClick={()=>props.handleInfoClose(key)}>
-                          <InfoViewContent lat={position.lat} lng={position.lng}/>
-                        </InfoWindow>
-                      }
-                      </Marker>
+        props.laps.map( (lap, indexLap) => {
+          return lap.tracks.map( (track, indexPosition) => {
+              return ((indexPosition!==0 || indexLap!==0 ) && (indexLap !== props.laps.length-1 || indexPosition !== props.laps[props.laps.length-1].tracks.length-1)) 
+                    ?
+                        <Marker key={indexLap+"_"+indexPosition} 
+                        position={track.position} 
+                        icon='https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'
+                        onClick={()=>props.handleMarkClick(indexLap+"_"+indexPosition)}
+                        >
+                        {props.keys.length > 0 && props.keys.indexOf(indexLap+"_"+indexPosition)!==-1 && 
+                          <InfoWindow onCloseClick={()=>props.handleInfoClose(indexLap+"_"+indexPosition)}>
+                            <InfoViewContent trackPoint={track}/>
+                          </InfoWindow>
+                        }
+                        </Marker> 
+                    :   null;
             
           }) 
         })
       }
       </MarkerClusterer>
-      <Marker position={props.path[props.path.length-1][props.path[props.path.length-1].length-1]}
-              key={(props.path.length-1)+"_"+(props.path[props.path.length-1].length-1)}
+      <Marker position={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1].position}
+              key={(props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1)}
               label={"B"}
-              onClick={()=>props.handleMarkClick((props.path.length-1)+"_"+(props.path[props.path.length-1].length-1))}
+              onClick={()=>props.handleMarkClick((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))}
               >
-              {props.isOpen && (props.keys.indexOf((props.path.length-1)+"_"+(props.path[props.path.length-1].length-1))!==-1) &&  
-                <InfoWindow onCloseClick={()=>props.handleInfoClose((props.path.length-1)+"_"+(props.path[props.path.length-1].length-1))}>
-                  <InfoViewContent  lat={props.path[props.path.length-1][props.path[props.path.length-1].length-1].lat} 
-                                    lng={props.path[props.path.length-1][props.path[props.path.length-1].length-1].lng}/>
+              {props.keys.length > 0 && (props.keys.indexOf((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))!==-1) &&  
+                <InfoWindow onCloseClick={()=>props.handleInfoClose((props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1))}>
+                  <InfoViewContent  trackPoint={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1]}/>
                 </InfoWindow>
               }
       </Marker>
@@ -135,11 +124,25 @@ class InfoViewContent extends Component{
   render(){
     return(
       <div>
-        <h3>Position</h3>
-        <h5>Latitude</h5><span>{this.props.lat}</span>
-        <h5>Longitude</h5><span>{this.props.lng}</span>
+        <h2>Track Point</h2>
+        <InfoViewLineComment title={"Time"} value={new Date(this.props.trackPoint.date).toLocaleTimeString()} />
+        <InfoViewLineComment title={"Latitude"} value={this.props.trackPoint.position.lat} />
+        <InfoViewLineComment title={"Longitude"} value={this.props.trackPoint.position.lng} />
+        <InfoViewLineComment title={"Altitude"} value={this.props.trackPoint.alt} />
+        <InfoViewLineComment title={"Speed"} value={this.props.trackPoint.speed} />
+        <InfoViewLineComment title={"Heart Rate (bpm)"} value={this.props.trackPoint.bpm} />
       </div>
-    );
+    )
+  }
+}
+
+class InfoViewLineComment extends Component{
+  render(){
+    return(
+      <p>
+        <strong>{this.props.title}</strong>: <span>{this.props.value}</span>
+      </p>
+    )
   }
 }
 

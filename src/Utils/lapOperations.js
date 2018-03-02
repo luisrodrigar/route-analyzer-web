@@ -1,3 +1,6 @@
+import randomColor from 'randomcolor'; 
+
+  // Unused because It delegates calculating the zoom to fitBound in RouteMapComponent (zoomToMarkers)  
   export function getCenterLaps(laps){
     let resumeCenterByLap = laps.map(lap=>{
         return getCenterOfALap(lap);
@@ -17,20 +20,21 @@
 
   export function getLapsTrackPoints(laps){
     return laps.map(lap => {
-        return getLapTrackPoint(lap);
-    });
-  }
-
-  export function getZoomOfALap(lap){
-    let tracksPositionNotNull = getLapTracksWithPosition(lap);
-    const min = tracksPositionNotNull.reduce((min, track) => {
-      if(min.lat > track.position.latitudeDegrees
-          && min.lng > track.position.longitudeDegrees)
         return {
-          lat: track.position.latitudeDegrees,
-          lng: track.position.longitudeDegrees
+              index:lap.index,
+              tracks:getLapTrackPoint(lap),
+              color:randomColor({luminosity: 'dark'}),
+              startTime: lap.startTime,
+              totalTime: lap.totalTimeSeconds,
+              distance: lap.distanceMeters,
+              maxSpeed: lap.maximunSpeed,
+              avgSpeed: lap.averageSpeed,
+              avgBpm: lap.averageHearRate,
+              maxBpm: lap.maximunHeartRate,
+              cal: lap.calories,
+              intensity: lap.intensity
         }
-    },0.0);
+    });
   }
 
   function getLapTracksWithPosition(lap){
@@ -43,12 +47,26 @@
   }
 
   function getLapTrackPoint(lap){
-    return getLapTracksWithPosition(lap).map(track => {
-        var lat = parseFloat(track.position.latitudeDegrees);
-        var lng = parseFloat(track.position.longitudeDegrees);
+    return getLapTracksWithPosition(lap).map(trackPoint => {
+        var lat = parseFloat(trackPoint.position.latitudeDegrees);
+        var lng = parseFloat(trackPoint.position.longitudeDegrees);
+        var alt = parseFloat(trackPoint.altitudeMeters);
+        var speed = parseFloat(trackPoint.speed);
+        var date = parseInt(trackPoint.date,10);
+        var dist = parseFloat(trackPoint.distanceMeters);
+        var bpm = parseInt(trackPoint.heartRateBpm,10);
+        var index = parseInt(trackPoint.index,10);
         return {
-          lat,
-          lng
+          index,
+          date,
+          position:{
+            lat,
+            lng
+          },
+          alt,
+          speed,
+          dist,
+          bpm
         };
     });
   }
