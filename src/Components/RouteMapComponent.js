@@ -69,7 +69,7 @@ const RouteMapComponent =
     </GoogleMap>
   );
 
-export class PositionNotFirstOrLastMarkerClustererComponent extends Component{
+ class PositionNotFirstOrLastMarkerClustererComponent extends Component{
 
   isFirstOrEndPosition(indexLap, indexPosition){
     let lastIndexLap = this.props.laps.length-1;
@@ -109,7 +109,7 @@ export class PositionNotFirstOrLastMarkerClustererComponent extends Component{
   }
 }
 
-export class MarkerInfoViewComponent extends Component{
+class MarkerInfoViewComponent extends Component{
 
   render(){
     return (
