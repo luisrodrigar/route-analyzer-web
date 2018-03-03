@@ -48,6 +48,7 @@ const RouteMapComponent =
         label={"A"}
         handleMarkClick={props.handleMarkClick}
         handleInfoClose={props.handleInfoClose}
+        handleRemoveMarker={props.handleRemoveMarker}
         keys={props.keys}
       />
       <PositionNotFirstOrLastMarkerClustererComponent 
@@ -56,6 +57,7 @@ const RouteMapComponent =
         minimumClusterSize={22}
         handleMarkClick={props.handleMarkClick}
         handleInfoClose={props.handleInfoClose}
+        handleRemoveMarker={props.handleRemoveMarker}
         keys={props.keys} 
       />
       <MarkerInfoViewComponent 
@@ -64,6 +66,7 @@ const RouteMapComponent =
         label={"B"}
         handleMarkClick={props.handleMarkClick}
         handleInfoClose={props.handleInfoClose}
+        handleRemoveMarker={props.handleRemoveMarker}
         keys={props.keys}
       />
     </GoogleMap>
@@ -97,6 +100,7 @@ const RouteMapComponent =
                           icon={'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'}
                           handleMarkClick={this.props.handleMarkClick}
                           handleInfoClose={this.props.handleInfoClose}
+                          handleRemoveMarker={this.props.handleRemoveMarker}
                           keys={this.props.keys}
                         />)
                     :   null);
@@ -120,7 +124,7 @@ class MarkerInfoViewComponent extends Component{
               >
               {this.props.keys.length > 0 && (this.props.keys.indexOf(this.props.keyMarker)!==-1) &&  
                 <InfoWindow onCloseClick={()=>this.props.handleInfoClose(this.props.keyMarker)}>
-                  <InfoViewContent  trackPoint={this.props.trackPoint}/>
+                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker}/>
                 </InfoWindow>
               }
       </Marker>
@@ -137,8 +141,10 @@ class InfoViewContent extends Component{
         <InfoViewLineComment title={"Latitude"} value={this.props.trackPoint.position.lat} />
         <InfoViewLineComment title={"Longitude"} value={this.props.trackPoint.position.lng} />
         <InfoViewLineComment title={"Altitude"} value={this.props.trackPoint.alt} />
+        <InfoViewLineComment title={"Distance"} value={this.props.trackPoint.dist} />
         <InfoViewLineComment title={"Speed"} value={this.props.trackPoint.speed} />
         <InfoViewLineComment title={"Heart Rate (bpm)"} value={this.props.trackPoint.bpm} />
+        <input type="button" onClick={()=>this.props.handleRemoveMarker(this.props.trackPoint.position, this.props.trackPoint.date, this.props.trackPoint.index)} value="Remove"/>
       </div>
     )
   }
