@@ -124,7 +124,7 @@ class MarkerInfoViewComponent extends Component{
               >
               {this.props.keys.length > 0 && (this.props.keys.indexOf(this.props.keyMarker)!==-1) &&  
                 <InfoWindow onCloseClick={()=>this.props.handleInfoClose(this.props.keyMarker)}>
-                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker}/>
+                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker} keyMarker={this.props.keyMarker}/>
                 </InfoWindow>
               }
       </Marker>
@@ -143,8 +143,8 @@ class InfoViewContent extends Component{
         <InfoViewLineComment title={"Altitude"} value={this.props.trackPoint.alt} />
         <InfoViewLineComment title={"Distance"} value={this.props.trackPoint.dist} />
         <InfoViewLineComment title={"Speed"} value={this.props.trackPoint.speed} />
-        <InfoViewLineComment title={"Heart Rate (bpm)"} value={this.props.trackPoint.bpm} />
-        <input type="button" onClick={()=>this.props.handleRemoveMarker(this.props.trackPoint.position, this.props.trackPoint.date, this.props.trackPoint.index)} value="Remove"/>
+        <InfoViewLineComment title={"Heart Rate"} value={this.props.trackPoint.bpm} />
+        <input type="button" onClick={()=>this.props.handleRemoveMarker(this.props.trackPoint.position, this.props.trackPoint.date, this.props.trackPoint.index, this.props.keyMarker)} value="Remove"/>
       </div>
     )
   }

@@ -37,78 +37,6 @@ import randomColor from 'randomcolor';
     });
   }
 
-  export function recalculateLapValues(lap){
-    let tracks = lap.tracks;
-    // Lap start time corresponds with the date of the first point
-    lap.startTime = tracks[0].date;
-    // Color of the current lap
-    lap.color = randomColor();
-    let totalDistance = 0, totalTime = 0, totalSpeed = 0, maxSpeed = 0, maxBpm = 0, totalBpm = 0;
-
-    tracks.forEach((track, index)=>{
-      if(index>0){
-        let previousTrack   = tracks[index-1];
-        let currentDistance = getDistanceBetweenPoints(previousTrack.position, track.position);
-        let timeBetween     = ( track.date - previousTrack.date ) / 1000;
-        let currentSpeed    = track.dist / timeBetween;
-
-        totalDistance += currentDistance;
-        totalTime += timeBetween;
-        totalSpeed += currentSpeed;
-        maxSpeed = (maxSpeed<currentSpeed)?currentSpeed : maxSpeed;
-        maxBpm = (maxBpm<track.bpm)?track.bpm : maxBpm;
-        totalBpm += track.bpm;
-        // Distance in meters
-        if(!track.dist)
-          track.dist = currentDistance;
-        // Speed in meters per second
-        if(!track.speed)
-          track.speed = currentSpeed;
-      }
-    });
-
-    lap.distance = totalDistance;
-    lap.totalTime = totalTime;
-    lap.avgBpm = lap.tracks.length > 0 ? totalBpm / lap.tracks.length : 0;
-    lap.avgSpeed = lap.tracks.length > 0 ? totalSpeed / lap.tracks.length : 0;
-    lap.maxSpeed = maxSpeed;
-    lap.maxBpm = maxBpm;
-  }
-
-  function getDistanceBetweenPoints(point1, point2){
-    // Convert degrees to radians
-    let latP1 = degrees2Radians(point1.lat), lngP1 = degrees2Radians(point1.lng);
-    let latP2 = degrees2Radians(point2.lat), lngP2 = degrees2Radians(point2.lng);
-
-    // Radius of earth in meters
-    let earthRadiusMeters = 6378100;
-
-    // Point P 
-    let rho1 = earthRadiusMeters * Math.cos(latP1);
-    let z1 = earthRadiusMeters * Math.sin(latP1);
-    let x1 = rho1 * Math.cos(lngP1);
-    let y1 = rho1 * Math.sin(lngP1);
-
-    // Point Q
-    let rho2 = earthRadiusMeters * Math.cos(latP2);
-    let z2 = earthRadiusMeters * Math.sin(latP2);
-    let x2 = rho2 * Math.cos(lngP2);
-    let y2 = rho2 * Math.sin(lngP2);
-
-    // Dot product
-    let dot = (x1 * x2 + y1 * y2 + z1 * z2);
-    let cosTheta = dot / (Math.pow(earthRadiusMeters, 2));
-
-    let theta = Math.acos(cosTheta);
-
-    return earthRadiusMeters * theta;
-
-  }
-
-  function degrees2Radians(degree){
-    return degree * Math.PI / 180.0;
-  }
-
   function getLapTracksWithPosition(lap){
     return lap.tracks
       .filter(track => {
@@ -164,4 +92,38 @@ import randomColor from 'randomcolor';
       lat,
       lng
     } 
+  }
+
+    function getDistanceBetweenPoints(point1, point2){
+    // Convert degrees to radians
+    let latP1 = degrees2Radians(point1.lat), lngP1 = degrees2Radians(point1.lng);
+    let latP2 = degrees2Radians(point2.lat), lngP2 = degrees2Radians(point2.lng);
+
+    // Radius of earth in meters
+    let earthRadiusMeters = 6378100;
+
+    // Point P 
+    let rho1 = earthRadiusMeters * Math.cos(latP1);
+    let z1 = earthRadiusMeters * Math.sin(latP1);
+    let x1 = rho1 * Math.cos(lngP1);
+    let y1 = rho1 * Math.sin(lngP1);
+
+    // Point Q
+    let rho2 = earthRadiusMeters * Math.cos(latP2);
+    let z2 = earthRadiusMeters * Math.sin(latP2);
+    let x2 = rho2 * Math.cos(lngP2);
+    let y2 = rho2 * Math.sin(lngP2);
+
+    // Dot product
+    let dot = (x1 * x2 + y1 * y2 + z1 * z2);
+    let cosTheta = dot / (Math.pow(earthRadiusMeters, 2));
+
+    let theta = Math.acos(cosTheta);
+
+    return earthRadiusMeters * theta;
+
+  }
+
+  function degrees2Radians(degree){
+    return degree * Math.PI / 180.0;
   }
