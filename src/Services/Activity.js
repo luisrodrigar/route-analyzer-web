@@ -12,6 +12,16 @@ export function get(id){
     	});
 }
 
+export function exportAs(id, type){
+	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id + "/export/" + type ;
+	return axios
+		.get(path)
+    	.then(res => res.data)
+    	.catch(err => {
+    		throw new Exception("Problem trying to export the file as " + type);
+    	});
+}
+
 export function removePoint(id, position, timeInMillis, index){
 	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/point";
 

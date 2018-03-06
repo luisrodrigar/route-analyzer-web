@@ -31,7 +31,6 @@ class RouteTableBody extends Component {
 	constructor(props){
 		super(props);
 		this.setLocationRows = this.setLocationRows.bind(this);
-		this.setLocationRows();
 	}
 
 	setLocationRows(){ 
