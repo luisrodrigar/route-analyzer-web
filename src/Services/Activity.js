@@ -41,3 +41,24 @@ export function removePoint(id, position, timeInMillis, index){
     		throw new Exception(err.response.data.description);
     	});
 }
+
+export function removeLaps(id,dataSelected){
+	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/laps";
+	
+	const indexLaps = dataSelected.map(lap => {
+		return lap.indexLap;
+	}).join(",");
+
+	const startTimeLaps = dataSelected.map(lap => {
+		return lap.startTime?lap.startTime:null;
+	}).join(",");
+
+	const url = path + "?date=" + startTimeLaps + "&index=" + indexLaps;
+
+	return axios
+		.put(url)
+    	.then(res => res.data)
+    	.catch(err => {
+    		throw new Exception(err.response.data.description);
+    	});
+}

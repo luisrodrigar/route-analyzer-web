@@ -21,14 +21,14 @@ export class DownloadFileComponent extends Component {
   	}
 
   	export(type) {
-		exportAs(this.props.id, type)
-			.then(response => {
-				FileDownload(response, this.props.id + "_" + type + '.xml');
-			})
-			.catch(err =>{
-				alert(err.message);
-			});
-  	}
+	    exportAs(this.props.id, type)
+	    .then(response => {
+	      FileDownload(response, this.props.id + "_" + type + '.xml');
+	    })
+	    .catch(err =>{
+	      alert(err.message);
+	    });
+	}
   	
 	render() {
 	   	return(

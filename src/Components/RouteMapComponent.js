@@ -6,10 +6,7 @@ import { MarkerClusterer } from "react-google-maps/lib/components/addons/MarkerC
 const RouteMapComponent =  
   compose(
     withProps({
-      googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDEtc96UC9co31AFUNuNsPZ1xV4SYEMwfA&v=3.exp&libraries=geometry,drawing,places",
-      loadingElement: <div style={{ height: '100%' }} />,
-      containerElement: <div style={{ height: '600px', width: '700px' }} />,
-      mapElement: <div style={{ height: '100%' }} />
+      googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDEtc96UC9co31AFUNuNsPZ1xV4SYEMwfA&v=3.exp&libraries=geometry,drawing,places"
     }),
     lifecycle({
       componentDidUpdate(prevProps, prevState) {

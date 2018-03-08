@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {Polyline} from 'react-google-maps';
 import {Route} from 'react-router-dom';
 import RouteMapComponent from './RouteMapComponent';
+import Paper from 'material-ui/Paper';
 import './RouteMapContainer.css';
 
 export class RouteMapContainer extends PureComponent {
@@ -101,6 +102,9 @@ export class RouteMapContainer extends PureComponent {
             handleInfoClose={this.handleInfoClose} 
             handleRemoveMarker={this.handleDeletePoint} 
             keys={this.state.keys}
+            loadingElement={<div style={{ height: '100%' }} />}
+      		containerElement= {<Paper style={{ height: '424px', width: '100%' , 'marginTop': '24px'}} />}
+      		mapElement= {<div style={{ height: '100%' }} />}
           />
         }/>
       );

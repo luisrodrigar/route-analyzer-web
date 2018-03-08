@@ -3,20 +3,36 @@ import logo from './logo.svg';
 import {BrowserRouter as Router } from 'react-router-dom'
 import FileUploaderContainer from './Components/FileUploaderContainer';
 import RouteContainer from './Components/RouteContainer';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import { CircularProgress } from 'material-ui/Progress';
+import blue from 'material-ui/colors/blue';
 import './App.css';
+
+const styles = theme => ({
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
+});
 
 class App extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      showMap: false
+      showMap: false,
+      progress: false
     };
     this.showMapRoute = this.showMapRoute.bind(this);
+    this.showProgressIcon = this.showProgressIcon.bind(this);
   }
 
   showMapRoute = function(idParam){
-    this.setState({showMap:true, id:idParam});
+    this.setState({showMap:true, id:idParam, progress: false});
+  }
+
+  showProgressIcon = function(){
+    this.setState({progress: true});
   }
 
   render() {
@@ -28,7 +44,8 @@ class App extends Component {
           <h1 className="App-title">Route Analyzer</h1>
         </header>
         <div className="App-intro">
-          <FileUploaderContainer showMapRoute={this.showMapRoute}/>
+          <FileUploaderContainer showProgressIcon={this.showProgressIcon} showMapRoute={this.showMapRoute}/>
+          {this.state.progress && <CircularProgress style={{ color: blue[600] }} size={240} />}
           {this.state.showMap && <RouteContainer id={this.state.id}/>}
         </div>
       </div>
@@ -37,4 +54,8 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(App);

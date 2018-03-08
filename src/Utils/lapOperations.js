@@ -1,23 +1,5 @@
 import randomColor from 'randomcolor'; 
 
-  // Unused because It delegates calculating the zoom to fitBound in RouteMapComponent (zoomToMarkers)  
-  export function getCenterLaps(laps){
-    let resumeCenterByLap = laps.map(lap=>{
-        return getCenterOfALap(lap);
-      });
-    const lat = resumeCenterByLap.reduce((total, center)=>{
-      return total = total + parseFloat(center.lat);
-    }, 0.0)/laps.length;
-    const lng = resumeCenterByLap.reduce((total, center)=>{
-      return total = total + parseFloat(center.lng);
-    }, 0.0)/laps.length;
-
-    return {
-      lat,
-      lng
-    }
-  }
-
   export function getLapsTrackPoints(laps){
     return laps.map(lap => {
         return {
@@ -71,30 +53,7 @@ import randomColor from 'randomcolor';
     });
   }
 
-
-  function getCenterOfALap(lap){
-    const tracksPositionNotNull = getLapTracksWithPosition(lap);
-    const lat = tracksPositionNotNull
-      .map(track =>{
-        return parseFloat(track.position.latitudeDegrees);
-      }).reduce(
-        (total,lat) => {return total+lat;}, 0.0
-      )/tracksPositionNotNull.length;
-
-    const lng = tracksPositionNotNull
-      .map(track=>{
-        return parseFloat(track.position.longitudeDegrees);
-      }).reduce(
-        (total,lng)=> {return total+lng;},0.0
-      )/tracksPositionNotNull.length;
-
-    return { 
-      lat,
-      lng
-    } 
-  }
-
-    function getDistanceBetweenPoints(point1, point2){
+  export function getDistanceBetweenPoints(point1, point2){
     // Convert degrees to radians
     let latP1 = degrees2Radians(point1.lat), lngP1 = degrees2Radians(point1.lng);
     let latP2 = degrees2Radians(point2.lat), lngP2 = degrees2Radians(point2.lng);
