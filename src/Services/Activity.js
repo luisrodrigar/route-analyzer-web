@@ -42,6 +42,16 @@ export function removePoint(id, position, timeInMillis, index){
     	});
 }
 
+export function	getElevationData(laps){
+	let elevations = [];
+	laps.forEach( lap =>
+		lap.tracks.forEach(track => 
+			elevations.push([track.date,track.alt])
+			)
+		)
+	return elevations;
+}
+
 export function removeLaps(id,dataSelected){
 	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/laps";
 	
