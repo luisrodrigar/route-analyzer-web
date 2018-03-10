@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import XYAxis             from './XYAxis';
 import DataLine           from './DataLine';
 import DataCircles           from './DataCircles';
+import Paper from 'material-ui/Paper';
 import * as d3            from "d3";
 import './Chart.css';
 
@@ -30,14 +31,20 @@ export class Chart extends Component{
     render() {
         const scales = { xScale: xScale(this.props), yScale: yScale(this.props) };
         return(
+          <Paper>
             <svg height={this.props.height} width={this.props.width} >
-                {this.props.laps.map( (lap, index) =>
-                      <DataCircles  {...this.props}
-                                    {...scales}
-                                    key={index} />
-                )}
-                <XYAxis {...this.props} {...scales} />
+                {//this.props.laps.map( (lap, index) =>
+                   //   <DataCircles  {...this.props}
+                    //                {...scales}
+                    //                key={index} />
+                //)
+                <DataLine  {...this.props}
+                                   {...scales}
+                                     />
+                }
+                <XYAxis {...this.props} {...scales} textYAxis={'Altitude (meters)'} textXAxis={'Time (hh:mm:ss)'} />
             </svg>
+          </Paper>
         );
     }
 }

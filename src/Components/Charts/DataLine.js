@@ -1,28 +1,33 @@
 import React    from 'react';
+import randomColor from 'randomcolor';
 import * as d3  from "d3";
 
 export class DataLine extends React.Component {
 
-	renderLine(props){
+	renderLine(props, xScale, yScale){
 
     let lineFunction = d3
-      .line()
-      .x(function(d) { return d.x; })
-      .y(function(d) { return d.y; });
+      .area()
+      .x(d=> xScale(d[0]))
+      .y1(d=> yScale(d[1]))
+      .y0(d=> yScale(0));
 
- 		return <path class={props.label}
-            d={lineFunction(props.data)} 
-            stroke={props.color}
-            stroke-width={2}
-            fill={'none'}/>
+    let elevationsData = [];
+    props.tracks.forEach(track => elevationsData.push([track.date, track.alt]));
+
+ 		return <path className={props.label}
+            d={lineFunction(elevationsData)} 
+            stroke={randomColor({hue:props.color, luminosity:'dark'})}
+            strokeWidth={1}
+            fill={randomColor({hue:props.color, luminosity:'light'})}
+            key={props.index}/>
 	};
 
-	render() {
-
+	render(){
 		return(
-      <g>{this.renderLine(this.props)}</g>
+      <g className={'lines'}>{this.props.laps.map(lap => this.renderLine(lap, this.props.xScale, this.props.yScale))}</g>
 		);
-    }
+  }
 
 }
 
