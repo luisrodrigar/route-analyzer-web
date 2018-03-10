@@ -29,7 +29,9 @@ const yScale = (props) => {
 export class Chart extends Component{
     
     render() {
-        const scales = { xScale: xScale(this.props), yScale: yScale(this.props) };
+        let scales = {};
+        if(this.props.data.length)
+          scales = { xScale: xScale(this.props), yScale: yScale(this.props) };
         return(
           <Paper>
             <svg height={this.props.height} width={this.props.width} >
@@ -38,7 +40,7 @@ export class Chart extends Component{
                     //                {...scales}
                     //                key={index} />
                 //)
-                <DataLine  {...this.props}
+                this.props.laps.length && <DataLine  {...this.props}
                                    {...scales}
                                      />
                 }

@@ -2,10 +2,13 @@ import randomColor from 'randomcolor';
 
   export function getLapsTrackPoints(laps){
     return laps.map(lap => {
+        let color = randomColor({luminosity:'bright'});
+        let lightColor = randomColor({hue:color,luminosity:'light'});
         return {
               index:lap.index,
               tracks:getLapTrackPoint(lap),
-              color:randomColor(),
+              color:lap.color?lap.color:color,
+              lightColor: lap.lightColor?lap.lightColor:lightColor,
               startTime: lap.startTime,
               totalTime: lap.totalTimeSeconds,
               distance: lap.distanceMeters,

@@ -1,5 +1,4 @@
 import React    from 'react';
-import randomColor from 'randomcolor';
 import * as d3  from "d3";
 
 export class DataLine extends React.Component {
@@ -17,9 +16,9 @@ export class DataLine extends React.Component {
 
  		return <path className={props.label}
             d={lineFunction(elevationsData)} 
-            stroke={randomColor({hue:props.color, luminosity:'dark'})}
+            stroke={props.color}
             strokeWidth={1}
-            fill={randomColor({hue:props.color, luminosity:'light'})}
+            fill={props.lightColor}
             key={props.index}/>
 	};
 

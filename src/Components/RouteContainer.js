@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {get, removePoint, removeLaps, getElevationData} from '../Services/activity';
+import {get, removePoint, removeLaps, getElevationData, setColors} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
 import {RouteMapContainer} from './RouteMapContainer';
 import {getLapsTrackPoints} from '../Utils/lapOperations';
@@ -32,8 +32,21 @@ class RouteContainer extends Component {
 	    }
 	}
 
+	saveLapsColors(activityObject, laps){
+		let data = laps.map((lap,index)=>lap.color.substring(1)+"-"+lap.lightColor.substring(1)).join('@');
+		setColors(activityObject.id, data)
+	}
+
+	saveColorsIfNotInformed(activityObject, laps){
+		if(activityObject.laps && activityObject.laps.length>0
+			&& activityObject.laps.filter(lap=> !lap.color).length>0){
+			this.saveLapsColors(activityObject, laps);
+		}
+	}
+
 	handleActivityResponse(activityObject){
 		let laps = getLapsTrackPoints(activityObject.laps);
+		this.saveColorsIfNotInformed(activityObject, laps);
 		let elevations = getElevationData(laps);
 		this.setState({
 			activity: activityObject,

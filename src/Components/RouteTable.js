@@ -19,12 +19,14 @@ import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
+import randomColor from 'randomcolor';
+import Avatar from 'material-ui/Avatar';
 import { lighten } from 'material-ui/styles/colorManipulator';
 
 // Columns data lap model
 const columnDataLap = [
   { id: 'startTime', numeric: false, disablePadding: true, label: 'Date' },
-  { id: 'intensity', numeric: false, disablePadding: true, label: 'Intensity' },
+  { id: 'intensity', numeric: false, disablePadding: false, label: 'Intensity' },
   { id: 'totalTime', numeric: true, disablePadding: true, label: 'Time (s)' },
   { id: 'distance', numeric: true, disablePadding: true, label: 'Distance (m)' },
   { id: 'avgSpeed', numeric: true, disablePadding: true, label: 'Avg. Speed (m/s)' },
@@ -57,7 +59,9 @@ class RouteTableHead extends React.Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
+          <TableCell>
+          </TableCell>
+          <TableCell padding="none">
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
@@ -184,8 +188,8 @@ const styles = theme => ({
 });
 
 // Create lap data row
-function createDataLaps(counter, startTime, totalTime, distance, maxSpeed, avgSpeed, maxBpm, avgBpm, cal, intensity) {
-  return { id: counter, intensity, startTime, totalTime, distance, avgSpeed, avgBpm, maxSpeed, maxBpm, cal };
+function createDataLaps(counter, startTime, totalTime, distance, maxSpeed, avgSpeed, maxBpm, avgBpm, cal, intensity, color, lightColor, index) {
+  return { id: counter, intensity, startTime, totalTime, distance, avgSpeed, avgBpm, maxSpeed, maxBpm, cal, color, lightColor, index};
 }
 
 // Create trackpoint data row
@@ -214,7 +218,7 @@ class RouteTable extends React.Component {
   createDataLaps(laps){
     return laps.map(lap =>
         createDataLaps(++this.counterLaps, lap.startTime, lap.totalTime, lap.distance, lap.maxSpeed, lap.avgSpeed,
-          lap.maxBpm, lap.avgBpm, lap.cal, lap.intensity)
+          lap.maxBpm, lap.avgBpm, lap.cal, lap.intensity, lap.color, lap.lightColor, lap.index)
         )
   }
 
@@ -253,18 +257,22 @@ class RouteTable extends React.Component {
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.id) });
+      this.setState({ 
+        selected: this.state.data.map(n => n.id),
+        dataSelected: this.state.data.map(n => {return {indexLap:n.index,startTime:n.startTime}})
+      });
       return;
     }
-    this.setState({ selected: [] });
+    this.setState({ selected: [], dataSelected:[] });
   };
 
   handleClick = (event, id) => {
     const { selected, dataSelected } = this.state;
     const selectedIndex = selected.indexOf(id);
 
-    let indexLap = id - 1;
-    let startTime = this.state.data[indexLap].startTime;
+    let indexLapTable = id - 1;
+    let startTime = this.state.data[indexLapTable].startTime;
+    let indexLap = this.state.data[indexLapTable].index;
     let objectSelected = {indexLap,startTime};
     const selectDataIndex = dataSelected.indexOf(objectSelected);
 
@@ -340,19 +348,32 @@ class RouteTable extends React.Component {
                     key={n.id}
                     selected={isSelected}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell  padding="none">
+                      <Avatar
+                        style={{
+                          backgroundColor:n.color,
+                          textAlign:'center',
+                          margin: '0 auto'
+                        }}
+                        size={15}
+                      >
+                      #{n.id}
+                      </Avatar>
+                    </TableCell>
+
+                    <TableCell padding="none">
                       <Checkbox checked={isSelected} />
                     </TableCell>
 
-                    <TableCell padding="none" >{n.startTime?new Date(n.startTime).toLocaleTimeString():n.id}</TableCell>
-                    <TableCell padding="none" >{n.intensity?n.intensity:'-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.totalTime?(Math.round(n.totalTime * 100) / 100):'-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.distance?(Math.round(n.distance * 100) / 100):'-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.avgSpeed?(Math.round(n.avgSpeed * 100) / 100):'-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.avgBpm?Math.round(n.avgBpm*100)/100:'-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.maxSpeed?(Math.round(n.maxSpeed * 100) / 100) : '-'}</TableCell>
-                    <TableCell padding="none" numeric>{n.maxBpm?n.maxBpm:'-'}</TableCell>
-                    <TableCell numeric>{n.cal?n.cal:'-'}</TableCell>
+                    <TableCell  padding="none" >{n.startTime?new Date(n.startTime).toLocaleTimeString():n.id}</TableCell>
+                    <TableCell  >{n.intensity?n.intensity:'-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.totalTime?(Math.round(n.totalTime * 100) / 100):'-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.distance?(Math.round(n.distance * 100) / 100):'-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.avgSpeed?(Math.round(n.avgSpeed * 100) / 100):'-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.avgBpm?Math.round(n.avgBpm*100)/100:'-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.maxSpeed?(Math.round(n.maxSpeed * 100) / 100) : '-'}</TableCell>
+                    <TableCell  padding="none" numeric>{n.maxBpm?n.maxBpm:'-'}</TableCell>
+                    <TableCell  numeric>{n.cal?n.cal:'-'}</TableCell>
                     
                   </TableRow>
                 );

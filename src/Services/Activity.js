@@ -72,3 +72,16 @@ export function removeLaps(id,dataSelected){
     		throw new Exception(err.response.data.description);
     	});
 }
+
+export function setColors(id, data){
+	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/color/laps";
+
+	const url = path + "?data=" + data;
+
+	return axios
+		.put(url)
+		.then()
+    	.catch(err => {
+    		throw new Exception(err.response.data.description);
+    	});
+}
