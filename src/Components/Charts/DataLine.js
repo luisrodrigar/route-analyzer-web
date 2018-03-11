@@ -18,7 +18,7 @@ export class DataLine extends React.Component {
             d={lineFunction(elevationsData)} 
             stroke={props.color}
             strokeWidth={1}
-            fill={props.lightColor}
+            fill={props.color}
             key={props.index}/>
 	};
 

@@ -1,14 +1,12 @@
-import randomColor from 'randomcolor'; 
+import {getColorRandom} from './materialColors';
 
   export function getLapsTrackPoints(laps){
-    return laps.map(lap => {
-        let color = randomColor({luminosity:'bright'});
-        let lightColor = randomColor({hue:color,luminosity:'light'});
+    let newLaps = laps.map(lap => {
         return {
               index:lap.index,
               tracks:getLapTrackPoint(lap),
-              color:lap.color?lap.color:color,
-              lightColor: lap.lightColor?lap.lightColor:lightColor,
+              color:lap.color?lap.color:null,
+              lightColor: lap.lightColor?lap.lightColor:null,
               startTime: lap.startTime,
               totalTime: lap.totalTimeSeconds,
               distance: lap.distanceMeters,
@@ -20,6 +18,22 @@ import randomColor from 'randomcolor';
               intensity: lap.intensity
         }
     });
+    let currentColors = newLaps.map(lap=>{
+      if(lap.color&&lap.lightColor) 
+        return [lap.color,lap.lightColor]
+      else
+        return null;
+    }).filter(item=>item);
+    let numLapsWithoutColor = newLaps.filter(lap=>!lap.color&&!lap.lightColor).length;
+    const colors = getColorRandom(numLapsWithoutColor, currentColors);
+    let index = 0;
+    newLaps.forEach(lap=>{
+      if(!lap.color && !lap.lightColor){
+        lap.color = colors[index][0];
+        lap.lightColor = colors[index++][1];
+      }
+    });
+    return newLaps;
   }
 
   function getLapTracksWithPosition(lap){
