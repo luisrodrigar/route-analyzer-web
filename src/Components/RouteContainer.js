@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import {get, removePoint, removeLaps, getElevationData, setColors} from '../Services/activity';
+import {get, removePoint, removeLaps, setColors} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
 import {RouteMapContainer} from './RouteMapContainer';
 import {getLapsTrackPoints} from '../Utils/lapOperations';
 import Grid from 'material-ui/Grid';
 import RouteTable from './RouteTable';
-import Chart from './Charts/Chart';
+import ElevationsChart from './ElevationsChart';
+import HeartRateChart from './HeartRateChart';
 import './RouteContainer.css';
 
-const charStyle = {
-  width   : 500,
-  height  : 300,
-  padding : 30,
-};
+
 
 class RouteContainer extends Component {
 
@@ -22,7 +19,10 @@ class RouteContainer extends Component {
 		this.removePosition = this.removePosition.bind(this);
 		this.removeLaps = this.removeLaps.bind(this);
 		this.handleActivityResponse = this.handleActivityResponse.bind(this);
-		this.state = {activity: {}, laps: [], elevations: []};
+		this.state = {
+			activity: {}, 
+			laps: []
+		};
 		this.setActivityObject(props.id);
 	}
 
@@ -47,11 +47,9 @@ class RouteContainer extends Component {
 	handleActivityResponse(activityObject){
 		let laps = getLapsTrackPoints(activityObject.laps);
 		this.saveColorsIfNotInformed(activityObject, laps);
-		let elevations = getElevationData(laps);
 		this.setState({
 			activity: activityObject,
-			laps,
-			elevations
+			laps: laps
 		});
 	}
 
@@ -108,13 +106,12 @@ class RouteContainer extends Component {
 						</Grid>
 					</Grid>
 					<Grid container spacing={8}>
-						<Grid item xs={4}>
-							<Chart 	data={this.state.elevations} 
-									laps={this.state.laps}
-									{...charStyle} />
-						</Grid>
-						<Grid item xs={6}>
-						</Grid>
+						<ElevationsChart 	laps={this.state.laps}
+											yTitle={'Altitude (m)'}
+											xTitle={'Time (hh:mm:ss)'}/>
+						<HeartRateChart 	laps={this.state.laps}
+											yTitle={'Heart Rate (bpm)'}
+											xTitle={'Time (hh:mm:ss)'}/>
 					</Grid>
 				</div>
 			);

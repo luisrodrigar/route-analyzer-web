@@ -9,9 +9,10 @@ export default class XYAxis extends React.Component{
       scale: this.props.xScale,
       orient: 'bottom',
       isTimeFormat: true,
+      timeFormat:"%H:%M:%S",
       text: this.props.textXAxis,
       dX:'.71em',
-      y:this.props.padding,
+      y:(this.props.padding-10),
       x:(this.props.width - this.props.padding - this.props.textXAxis.length)
     };
     const ySettings = {
@@ -22,9 +23,10 @@ export default class XYAxis extends React.Component{
       text: this.props.textYAxis,
       textTranslate: 'rotate(-90)',
       dY:'.71em',
-      y:6
+      x:-1,
+      y:(-1*(this.props.padding-5))
     };
-    return <g className="XYAxis">
+    return <g className="x-y-axis">
       <Axis className={'x'} {...xSettings}/>
       <Axis className={'y'} {...ySettings}/>
     </g>

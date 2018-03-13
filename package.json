@@ -8,7 +8,7 @@
     "googlemaps": "^1.12.0",
     "js-file-download": "^0.4.1",
     "markerclustererplus": "^2.1.4",
-    "material-ui": "^1.0.0-beta.36",
+    "material-ui": "^1.0.0-beta.37",
     "material-ui-icons": "^1.0.0-beta.36",
     "np": "^2.20.1",
     "polyfills": "^2.1.1",
@@ -19,7 +19,8 @@
     "react-infinite-scroller": "^1.1.3",
     "react-router-dom": "^4.2.2",
     "react-script": "^2.0.5",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "react-sizeme": "^2.3.6"
   },
   "scripts": {
     "start": "react-scripts start",

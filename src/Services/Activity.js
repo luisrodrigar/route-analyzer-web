@@ -22,6 +22,28 @@ export function exportAs(id, type){
     	});
 }
 
+export function getLapsHeartRate(laps){
+	return laps.map(lap=> {
+		return {
+		    index: lap.index,
+		    color: lap.color,
+		    label: "Lap " + lap.index,
+			tracks:lap.tracks.map(track=>[track.date, track.bpm])
+		}
+	});
+}
+
+export function getLapsElevations(laps){
+	return laps.map(lap=> {
+		return {
+		    index: lap.index,
+		    color: lap.color,
+		    label: "Lap " + lap.index,
+			tracks:lap.tracks.map(track=>[track.date, track.alt])
+		}
+	});
+}
+
 export function removePoint(id, position, timeInMillis, index){
 	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/point";
 
@@ -40,6 +62,24 @@ export function removePoint(id, position, timeInMillis, index){
     	.catch(err => {
     		throw new Exception(err.response.data.description);
     	});
+}
+
+export function getAvgBpm(laps){
+	let avgBpm = [];
+	laps.forEach( lap =>
+		avgBpm.push([lap.avgBpm,((lap.tracks[0].date+lap.tracks[lap.tracks.length-1].date)/2)])
+	);
+	return avgBpm;
+}
+
+export function	getHeartRateData(laps){
+	let bpms = [];
+	laps.forEach( lap =>
+		lap.tracks.forEach(track => 
+			bpms.push([track.date,track.bpm])
+			)
+		)
+	return bpms;
 }
 
 export function	getElevationData(laps){

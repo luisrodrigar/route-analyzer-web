@@ -129,7 +129,7 @@ const toolbarStyles = theme => ({
 });
 
 let RouteTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, dataSize } = props;
 
   return (
     <Toolbar
@@ -148,7 +148,7 @@ let RouteTableToolbar = props => {
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
-        {numSelected > 0 ? (
+        {numSelected > 0 && numSelected < dataSize ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete" onClick={() => props.handleRemoveLaps()}>
               <DeleteIcon />
@@ -323,7 +323,7 @@ class RouteTable extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <RouteTableToolbar handleRemoveLaps={this.removeLaps} numSelected={selected.length}/>
+        <RouteTableToolbar handleRemoveLaps={this.removeLaps} numSelected={selected.length} dataSize={data.length}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <RouteTableHead

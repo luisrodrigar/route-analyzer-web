@@ -1,31 +1,32 @@
 import React    from 'react';
 import * as d3  from "d3";
+import {getColorObject} from '../../Utils/materialColors';
 
 export class DataLine extends React.Component {
 
-	renderLine(props, xScale, yScale){
+  renderLine(laps, xScale, yScale){
 
     let lineFunction = d3
-      .area()
+      .line()
       .x(d=> xScale(d[0]))
-      .y1(d=> yScale(d[1]))
-      .y0(d=> yScale(0));
+      .y(d=> yScale(d[1]));
 
-    let elevationsData = [];
-    props.tracks.forEach(track => elevationsData.push([track.date, track.alt]));
+    let color = getColorObject('Red')[500];
 
- 		return <path className={props.label}
-            d={lineFunction(elevationsData)} 
-            stroke={props.color}
-            strokeWidth={1}
-            fill={props.color}
-            key={props.index}/>
-	};
+    return <path  className={'avg-bpm'}
+                  d={lineFunction(laps)} 
+                  stroke={color}
+                  strokeWidth={2}/>
+  };
 
-	render(){
-		return(
-      <g className={'lines'}>{this.props.laps.map(lap => this.renderLine(lap, this.props.xScale, this.props.yScale))}</g>
-		);
+  render(){
+    return(
+      <g className={'areas'}>
+      { 
+        this.renderLine(this.props.dataLine, this.props.xScale, this.props.yScale)
+      }
+      </g>
+    );
   }
 
 }

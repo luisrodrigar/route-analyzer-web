@@ -26,7 +26,7 @@ const mainColors = [
 const lightPalette = [200];
 const darkPalette = [500,900];
 
-function getColorObject(name){
+export function getColorObject(name){
   switch(name){
     case mainColors[0]:
     return red;
