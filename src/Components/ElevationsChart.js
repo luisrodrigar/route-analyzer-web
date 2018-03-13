@@ -2,7 +2,7 @@ import React    from 'react';
 import sizeMe from 'react-sizeme';
 import Grid from 'material-ui/Grid';
 import AreaChart from './Charts/AreaChart'
-import {getElevationData, getLapsElevations} from '../Services/activity';
+import {getElevationData, getLapsElevations} from '../Utils/lapOperations';
 
 // Using a react-sizeme library to get width and height values => Handling on resize event
 const MySizeGrid = sizeMe({ monitorHeight: true })(Grid);

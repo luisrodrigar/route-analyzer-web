@@ -25,14 +25,22 @@ class App extends Component {
     };
     this.showMapRoute = this.showMapRoute.bind(this);
     this.showProgressIcon = this.showProgressIcon.bind(this);
+    this.hideProgressIcon = this.hideProgressIcon.bind(this);
   }
 
   showMapRoute = function(idParam){
-    this.setState({showMap:true, id:idParam, progress: false});
+    if(idParam)
+      this.setState({showMap:true, id:idParam, progress: false});
+    else
+      this.hideProgressIcon();
   }
 
   showProgressIcon = function(){
     this.setState({progress: true});
+  }
+
+  hideProgressIcon = function(){
+    this.setState({progress: false});
   }
 
   render() {
@@ -44,7 +52,7 @@ class App extends Component {
           <h1 className="App-title">Route Analyzer</h1>
         </header>
         <div className="App-intro">
-          <FileUploaderContainer showProgressIcon={this.showProgressIcon} showMapRoute={this.showMapRoute}/>
+          <FileUploaderContainer showProgressIcon={this.showProgressIcon} showMapRoute={this.showMapRoute} />
           {this.state.progress && <CircularProgress style={{ color: blue[600] }} size={240} />}
           {this.state.showMap && <RouteContainer id={this.state.id}/>}
         </div>

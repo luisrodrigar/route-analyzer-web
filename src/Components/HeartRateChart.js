@@ -2,7 +2,7 @@ import React    from 'react';
 import sizeMe from 'react-sizeme';
 import Grid from 'material-ui/Grid';
 import BarChart from './Charts/BarChart'
-import {getLapsHeartRate, getHeartRateData,getAvgBpm} from '../Services/activity';
+import {getLapsHeartRate, getHeartRateData, getAvgBpm} from '../Utils/lapOperations';
 
 // Using a react-sizeme library to get width and height values => Handling on resize event
 const MySizeGrid = sizeMe({ monitorHeight: true })(Grid);

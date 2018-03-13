@@ -24,6 +24,7 @@ class FileUploaderContainer extends Component {
       })
       .catch(err => {
         alert(err.message);
+        this.props.showMapRoute(null);
       });
 
   };

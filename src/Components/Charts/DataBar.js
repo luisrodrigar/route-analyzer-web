@@ -1,5 +1,4 @@
 import React    from 'react';
-import * as d3  from "d3";
 
 export class DataBar extends React.Component {
 
@@ -21,7 +20,6 @@ export class DataBar extends React.Component {
 	};
 
 	render(){
-    let minYValue = d3.min(this.props.data, d => d[1]);
 		return(
       <g className={'bars'}>
       { 

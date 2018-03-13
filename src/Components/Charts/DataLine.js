@@ -4,26 +4,32 @@ import {getColorObject} from '../../Utils/materialColors';
 
 export class DataLine extends React.Component {
 
-  renderLine(laps, xScale, yScale){
+  constructor(props){
+    super(props);
+    this.renderLine = this.renderLine.bind(this);
+  }
+
+  renderLine(props){
 
     let lineFunction = d3
       .line()
-      .x(d=> xScale(d[0]))
-      .y(d=> yScale(d[1]));
+      .x(datum=>props.xScale(datum[0]))
+      .y(datum=>props.yScale(datum[1]));
 
     let color = getColorObject('Red')[500];
 
     return <path  className={'avg-bpm'}
-                  d={lineFunction(laps)} 
+                  d={lineFunction(props.dataLine)} 
                   stroke={color}
-                  strokeWidth={2}/>
+                  strokeWidth={props.dataLine===1?12:1}
+                  fill={'none'}/>
   };
 
   render(){
     return(
-      <g className={'areas'}>
+      <g className={'line'}>
       { 
-        this.renderLine(this.props.dataLine, this.props.xScale, this.props.yScale)
+        this.renderLine(this.props)
       }
       </g>
     );

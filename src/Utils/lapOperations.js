@@ -36,6 +36,66 @@ import {getColorRandom} from './materialColors';
     return newLaps;
   }
 
+  export function getLapsHeartRate(laps){
+    return laps.map(lap=> {
+      return {
+          index: lap.index,
+          color: lap.lightColor,
+          label: "Lap " + lap.index,
+        tracks:lap.tracks.map(track=>[track.date, track.bpm])
+      }
+    });
+  }
+
+  export function getLapsElevations(laps){
+    return laps.map(lap=> {
+      return {
+          index: lap.index,
+          color: lap.color,
+          label: "Lap " + lap.index,
+        tracks:lap.tracks.map(track=>[track.date, track.alt])
+      }
+    });
+  }
+
+  export function getAvgBpm(laps){
+    let avgBpm = [];
+    laps.forEach( lap =>
+      avgBpm.push([((lap.tracks[0].date+lap.tracks[lap.tracks.length-1].date)/2),lap.avgBpm])
+    );
+
+    if(laps.length===1){
+      let avgDate = avgBpm[0][0];
+      let initDate = laps[0].tracks[0].date;
+      let endDate = laps[0].tracks[(laps[0].tracks.length)-1].date;
+      avgBpm = [];
+      avgBpm.push([initDate, laps[0].avgBpm]);
+      avgBpm.push([avgDate, laps[0].avgBpm]);
+      avgBpm.push([endDate, laps[0].avgBpm]);
+    }
+    return avgBpm;
+  }
+
+  export function getHeartRateData(laps){
+    let bpms = [];
+    laps.forEach( lap =>
+      lap.tracks.forEach(track => 
+        bpms.push([track.date,track.bpm])
+        )
+      )
+    return bpms;
+  }
+
+  export function getElevationData(laps){
+    let elevations = [];
+    laps.forEach( lap =>
+      lap.tracks.forEach(track => 
+        elevations.push([track.date,track.alt])
+        )
+      )
+    return elevations;
+  }
+
   function getLapTracksWithPosition(lap){
     return lap.tracks
       .filter(track => {
