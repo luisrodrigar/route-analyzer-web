@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {get, removePoint, removeLaps, setColors} from '../Services/activity';
+import {get, removePoint, removeLaps, setColors, splitLap} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
 import {RouteMapContainer} from './RouteMapContainer';
 import {getLapsTrackPoints} from '../Utils/lapOperations';
@@ -7,6 +7,7 @@ import Grid from 'material-ui/Grid';
 import RouteTable from './RouteTable';
 import ElevationsChart from './ElevationsChart';
 import HeartRateChart from './HeartRateChart';
+import SpeedChart from './SpeedChart';
 import './RouteContainer.css';
 
 
@@ -17,6 +18,7 @@ class RouteContainer extends Component {
 		super(props);
 		this.setActivityObject = this.setActivityObject.bind(this);
 		this.removePosition = this.removePosition.bind(this);
+		this.splitLap = this.splitLap.bind(this);
 		this.removeLaps = this.removeLaps.bind(this);
 		this.handleActivityResponse = this.handleActivityResponse.bind(this);
 		this.state = {
@@ -73,6 +75,16 @@ class RouteContainer extends Component {
 	      	});
   	}
 
+  	splitLap(position, date, index){
+  		splitLap(this.props.id,position, date, index)
+	      	.then( activityObject => {
+	      		this.handleActivityResponse(activityObject);
+	      	})
+	      	.catch( err => {
+	        	alert(err.message);
+	      	});
+  	}
+
   	removeLaps(dataSelected){
   		removeLaps(this.props.id, dataSelected)
   			.then(activityObject => {
@@ -101,7 +113,7 @@ class RouteContainer extends Component {
 						</Grid>
 						<Grid item xs={5}>
 							<div className="RouteMap">
-								<RouteMapContainer handleRemoveMarker={this.removePosition} laps={this.state.laps} />
+								<RouteMapContainer handleRemoveMarker={this.removePosition} handleSplitLap={this.splitLap} laps={this.state.laps} />
 							</div>
 						</Grid>
 					</Grid>
@@ -111,6 +123,9 @@ class RouteContainer extends Component {
 											xTitle={'Time (hh:mm:ss)'}/>
 						<HeartRateChart 	laps={this.state.laps}
 											yTitle={'Heart Rate (bpm)'}
+											xTitle={'Time (hh:mm:ss)'}/>
+						<SpeedChart		 	laps={this.state.laps}
+											yTitle={'Speed (m/s)'}
 											xTitle={'Time (hh:mm:ss)'}/>
 					</Grid>
 				</div>

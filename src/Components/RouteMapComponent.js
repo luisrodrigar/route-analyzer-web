@@ -55,6 +55,7 @@ const RouteMapComponent =
         handleMarkClick={props.handleMarkClick}
         handleInfoClose={props.handleInfoClose}
         handleRemoveMarker={props.handleRemoveMarker}
+        handleSplitLap={props.handleSplitLap}
         keys={props.keys} 
       />
       <MarkerInfoViewComponent 
@@ -89,7 +90,20 @@ const RouteMapComponent =
       {
         this.props.laps.map( (lap, indexLap) => {
           return lap.tracks.map( (track, indexPosition) => {
-              return ((this.isFirstOrEndPosition(indexLap,indexPosition)) ? 
+              return ((this.isFirstOrEndPosition(indexLap,indexPosition)) ?
+                      ( track.index > this.props.laps[indexLap].tracks[0].index 
+                        && track.index < this.props.laps[indexLap].tracks[this.props.laps[indexLap].tracks.length - 1 ].index ?
+                        (<MarkerInfoViewComponent 
+                          trackPoint={track}
+                          key={indexLap+"_"+indexPosition}
+                          keyMarker={indexLap+"_"+indexPosition}
+                          icon={'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'}
+                          handleMarkClick={this.props.handleMarkClick}
+                          handleInfoClose={this.props.handleInfoClose}
+                          handleRemoveMarker={this.props.handleRemoveMarker}
+                          handleSplitLap={this.props.handleSplitLap}
+                          keys={this.props.keys}
+                        />):
                         (<MarkerInfoViewComponent 
                           trackPoint={track}
                           key={indexLap+"_"+indexPosition}
@@ -100,6 +114,7 @@ const RouteMapComponent =
                           handleRemoveMarker={this.props.handleRemoveMarker}
                           keys={this.props.keys}
                         />)
+                      )
                     :   null);
             
           }) 
@@ -121,7 +136,7 @@ class MarkerInfoViewComponent extends Component{
               >
               {this.props.keys.length > 0 && (this.props.keys.indexOf(this.props.keyMarker)!==-1) &&  
                 <InfoWindow onCloseClick={()=>this.props.handleInfoClose(this.props.keyMarker)}>
-                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker} keyMarker={this.props.keyMarker}/>
+                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker} handleSplitLap={this.props.handleSplitLap} keyMarker={this.props.keyMarker}/>
                 </InfoWindow>
               }
       </Marker>
@@ -142,6 +157,9 @@ class InfoViewContent extends Component{
         <InfoViewLineComment title={"Speed"} value={this.props.trackPoint.speed} />
         <InfoViewLineComment title={"Heart Rate"} value={this.props.trackPoint.bpm} />
         <input type="button" onClick={()=>this.props.handleRemoveMarker(this.props.trackPoint.position, this.props.trackPoint.date, this.props.trackPoint.index, this.props.keyMarker)} value="Remove"/>
+       { this.props.handleSplitLap && 
+        <input type="button" onClick={()=>this.props.handleSplitLap(this.props.trackPoint.position, this.props.trackPoint.date, this.props.trackPoint.index)} value="Split Lap"/>
+        }
       </div>
     )
   }

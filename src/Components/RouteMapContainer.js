@@ -101,6 +101,7 @@ export class RouteMapContainer extends PureComponent {
             handleMarkClick={this.handleMarkClick} 
             handleInfoClose={this.handleInfoClose} 
             handleRemoveMarker={this.handleDeletePoint} 
+            handleSplitLap={this.props.handleSplitLap}
             keys={this.state.keys}
             loadingElement={<div style={{ height: '100%' }} />}
       		containerElement= {<Paper style={{ height: '424px', width: '100%' , 'marginTop': '24px'}} />}

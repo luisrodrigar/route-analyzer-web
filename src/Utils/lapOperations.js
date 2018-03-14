@@ -2,7 +2,7 @@ import {getColorRandom} from './materialColors';
 
 export function getLapsTrackPoints(laps){
   let newLaps = laps.map(lap => {
-    
+
       return {
             index:lap.index,
             tracks:getLapTrackPoint(lap),
@@ -35,6 +35,17 @@ export function getLapsTrackPoints(laps){
     }
   });
   return newLaps;
+}
+
+export function getLapsSpeed(laps){
+  return laps.map(lap=> {
+    return {
+        index: lap.index,
+        color: lap.lightColor,
+        label: "Lap " + lap.index,
+      tracks:lap.tracks.map(track=>[track.date, track.speed])
+    }
+  });
 }
 
 export function getLapsHeartRate(laps){
@@ -77,6 +88,24 @@ export function getAvgBpm(laps){
   return avgBpm;
 }
 
+export function getAvgSpeed(laps){
+  let avgSpeed = [];
+  laps.forEach( lap =>
+    avgSpeed.push([((lap.tracks[0].date+lap.tracks[lap.tracks.length-1].date)/2),lap.avgSpeed])
+  );
+
+  if(laps.length===1){
+    let avgDate = avgSpeed[0][0];
+    let initDate = laps[0].tracks[0].date;
+    let endDate = laps[0].tracks[(laps[0].tracks.length)-1].date;
+    avgSpeed = [];
+    avgSpeed.push([initDate, laps[0].avgSpeed]);
+    avgSpeed.push([avgDate, laps[0].avgSpeed]);
+    avgSpeed.push([endDate, laps[0].avgSpeed]);
+  }
+  return avgSpeed;
+}
+
 export function getHeartRateData(laps){
   let bpms = [];
   laps.forEach( lap =>
@@ -95,6 +124,16 @@ export function getElevationData(laps){
       )
     )
   return elevations;
+}
+
+export function getSpeedData(laps){
+  let speed = [];
+  laps.forEach( lap =>
+    lap.tracks.forEach(track => 
+      speed.push([track.date,track.speed])
+      )
+    )
+  return speed;
 }
 
 function getLapTracksWithPosition(lap){

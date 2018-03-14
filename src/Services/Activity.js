@@ -42,6 +42,26 @@ export function removePoint(id, position, timeInMillis, index){
     	});
 }
 
+export function splitLap(id, position, timeInMillis, index){
+	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/split/lap";
+
+	const latParam = "lat="+position.lat;
+	const lngParam = "lng="+position.lng;
+
+	const positionParam = latParam+"&"+lngParam;
+	const timeInMillisParam = isNaN(timeInMillis) ? null : "timeInMillis=" + timeInMillis ;
+	const indexParam = "index="+index;
+	
+	const url = path + "?" + positionParam + (timeInMillisParam ? "&" + timeInMillisParam : "&timeInMillis=") + "&" + indexParam;
+
+	return axios
+		.put(url)
+    	.then(res => res.data)
+    	.catch(err => {
+    		throw new Exception(err.response.data.description);
+    	});
+}
+
 export function removeLaps(id,dataSelected){
 	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/laps";
 	

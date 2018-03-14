@@ -3,15 +3,12 @@ import AbstractChart from './AbstractChart';
 import DataBar from './DataBar';
 import DataLine from './DataLine';
 
-export class BarChart extends React.Component{
+export class LineChart extends React.Component{
     
 	render(){
         let existInformedData = this.props.data && this.props.data.filter(data=>data[1]).length>0;
 		return( 
 			<AbstractChart {...this.props} >
-				{ existInformedData && 
-	              	<DataBar   {...this.props}/>
-                }
                 { existInformedData &&
                     <DataLine   {...this.props}/>
 				}
@@ -20,4 +17,4 @@ export class BarChart extends React.Component{
 	}
 }
 
-export default BarChart;
+export default LineChart;
