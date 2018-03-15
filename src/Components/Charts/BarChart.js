@@ -2,6 +2,7 @@ import React from 'react';
 import AbstractChart from './AbstractChart';
 import DataBar from './DataBar';
 import DataLine from './DataLine';
+import {getColorObject} from '../../Utils/materialColors';
 
 export class BarChart extends React.Component{
     
@@ -13,7 +14,9 @@ export class BarChart extends React.Component{
 	              	<DataBar   {...this.props}/>
                 }
                 { existInformedData &&
-                    <DataLine   {...this.props}/>
+                    <DataLine   {...this.props} 
+                                color={getColorObject('Red')[500]}
+                                strokeWidth={1}/>
 				}
 			</AbstractChart>
 		);

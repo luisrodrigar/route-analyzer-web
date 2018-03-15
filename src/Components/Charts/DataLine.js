@@ -1,6 +1,5 @@
 import React    from 'react';
 import * as d3  from "d3";
-import {getColorObject} from '../../Utils/materialColors';
 
 export class DataLine extends React.Component {
 
@@ -16,12 +15,10 @@ export class DataLine extends React.Component {
       .x(datum=>props.xScale(datum[0]))
       .y(datum=>props.yScale(datum[1]));
 
-    let color = getColorObject('Red')[500];
-
     return <path  className={'avg-bpm'}
                   d={lineFunction(props.dataLine)} 
-                  stroke={color}
-                  strokeWidth={props.dataLine===1?12:1}
+                  stroke={this.props.color}
+                  strokeWidth={this.props.strokeWidth}
                   fill={'none'}/>
   };
 

@@ -27,8 +27,8 @@ export default class XYAxis extends React.Component{
       y:(-1*(this.props.padding-5))
     };
     return <g className="x-y-axis">
-      <Axis className={'x'} {...xSettings}/>
-      <Axis className={'y'} {...ySettings}/>
+      <Axis className={'x'} {...xSettings} ticks = {this.props.ticks}/>
+      <Axis className={'y'} {...ySettings} ticks = {this.props.ticks}/>
     </g>
   }
 

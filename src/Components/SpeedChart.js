@@ -63,14 +63,15 @@ export class SpeedChart extends React.Component {
             item
             xs={4}
             style={{maxHeight:'500px', minWidth:'420px'}}>
-            <LineChart   data={this.state.speeds} 
+            <LineChart  data={this.state.speeds} 
                         laps={this.state.laps}
                         dataLine={this.state.avg}
                         textYAxis={this.props.yTitle}
                         textXAxis={this.props.xTitle}
                         padding = {40}
                         width = {this.state.width}
-                        height = {this.state.height}/>
+                        height = {this.state.height}
+                        ticks={5}/>
       </MySizeGrid>
 		);
   }

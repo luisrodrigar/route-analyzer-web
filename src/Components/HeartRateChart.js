@@ -70,7 +70,8 @@ export class HeartRateChart extends React.Component {
                         textXAxis={this.props.xTitle}
                         padding = {40}
                         width = {this.state.width}
-                        height = {this.state.height}/>
+                        height = {this.state.height}
+                        ticks={5}/>
       </MySizeGrid>
 		);
   }

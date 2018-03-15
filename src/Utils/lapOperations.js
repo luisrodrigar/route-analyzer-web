@@ -40,9 +40,10 @@ export function getLapsTrackPoints(laps){
 export function getLapsSpeed(laps){
   return laps.map(lap=> {
     return {
-        index: lap.index,
-        color: lap.lightColor,
-        label: "Lap " + lap.index,
+      index: lap.index,
+      color: lap.lightColor,
+      label: "Lap " + lap.index,
+      stroke: 2,
       tracks:lap.tracks.map(track=>[track.date, track.speed])
     }
   });
@@ -51,9 +52,9 @@ export function getLapsSpeed(laps){
 export function getLapsHeartRate(laps){
   return laps.map(lap=> {
     return {
-        index: lap.index,
-        color: lap.lightColor,
-        label: "Lap " + lap.index,
+      index: lap.index,
+      color: lap.lightColor,
+      label: "Lap " + lap.index,
       tracks:lap.tracks.map(track=>[track.date, track.bpm])
     }
   });
