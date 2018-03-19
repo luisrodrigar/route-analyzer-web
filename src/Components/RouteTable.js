@@ -18,6 +18,7 @@ import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
+import CallMergeIcon from 'material-ui-icons/CallMerge';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import Avatar from 'material-ui/Avatar';
 import { lighten } from 'material-ui/styles/colorManipulator';
@@ -148,6 +149,15 @@ let RouteTableToolbar = props => {
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
+        {
+          numSelected===2?
+            <Tooltip title="Join">
+              <IconButton aria-label="Join" onClick={() => props.handleJoinLaps()}>
+                <CallMergeIcon />
+              </IconButton>
+            </Tooltip>
+            : null
+        }
         {numSelected > 0 && numSelected < dataSize ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete" onClick={() => props.handleRemoveLaps()}>
@@ -252,7 +262,7 @@ class RouteTable extends React.Component {
         : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
     this.setState({ data, order, orderBy });
-  };
+  }
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
@@ -263,7 +273,7 @@ class RouteTable extends React.Component {
       return;
     }
     this.setState({ selected: [], dataSelected:[] });
-  };
+  }
 
   handleClick = (event, id) => {
     const { selected, dataSelected } = this.state;
@@ -299,18 +309,23 @@ class RouteTable extends React.Component {
     }
 
     this.setState({ selected: newSelected, dataSelected: newDataSelected });
-  };
+  }
 
   handleChangePage = (event, page) => {
     this.setState({ page });
-  };
+  }
 
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
-  };
+  }
 
   removeLaps = () => {
     this.props.handleRemoveLaps(this.state.dataSelected);
+    this.setState({ selected: [], dataSelected: []});
+  }
+
+  joinLaps = () => {
+    this.props.handleJoinLaps(this.state.dataSelected);
     this.setState({ selected: [], dataSelected: []});
   }
 
@@ -323,7 +338,10 @@ class RouteTable extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <RouteTableToolbar handleRemoveLaps={this.removeLaps} numSelected={selected.length} dataSize={data.length}/>
+        <RouteTableToolbar  handleRemoveLaps={this.removeLaps} 
+                            handleJoinLaps={this.joinLaps}
+                            numSelected={selected.length} 
+                            dataSize={data.length}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <RouteTableHead

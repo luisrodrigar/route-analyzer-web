@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {get, removePoint, removeLaps, setColors, splitLap} from '../Services/activity';
+import {get, removePoint, removeLaps, setColors, splitLap, joinLaps} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
 import {RouteMapContainer} from './RouteMapContainer';
 import {getLapsTrackPoints} from '../Utils/lapOperations';
@@ -16,11 +16,12 @@ class RouteContainer extends Component {
 
 	constructor(props){
 		super(props);
+		this.handleActivityResponse = this.handleActivityResponse.bind(this);
 		this.setActivityObject = this.setActivityObject.bind(this);
 		this.removePosition = this.removePosition.bind(this);
 		this.splitLap = this.splitLap.bind(this);
 		this.removeLaps = this.removeLaps.bind(this);
-		this.handleActivityResponse = this.handleActivityResponse.bind(this);
+		this.joinLaps = this.joinLaps.bind(this);
 		this.state = {
 			activity: {}, 
 			laps: []
@@ -95,6 +96,16 @@ class RouteContainer extends Component {
 	      	});
   	}
 
+  	joinLaps(dataSelected){
+  		joinLaps(this.props.id, dataSelected)
+  			.then(activityObject =>{
+  				this.handleActivityResponse(activityObject)
+  			})
+  			.catch(err =>{
+  				alert(err.message);
+  			});
+  	}
+
 	render(){
 		if(this.state.activity && this.state.activity.laps){
 			return (
@@ -108,12 +119,16 @@ class RouteContainer extends Component {
 					<Grid container spacing={16}>
 						<Grid item xs={7}>
 							<div className="RouteTable">
-								<RouteTable handleRemoveLaps={this.removeLaps} laps={this.state.laps}/>
+								<RouteTable handleRemoveLaps={this.removeLaps} 
+											handleJoinLaps={this.joinLaps} 
+											laps={this.state.laps}/>
 							</div>
 						</Grid>
 						<Grid item xs={5}>
 							<div className="RouteMap">
-								<RouteMapContainer handleRemoveMarker={this.removePosition} handleSplitLap={this.splitLap} laps={this.state.laps} />
+								<RouteMapContainer 	handleRemoveMarker={this.removePosition} 
+													handleSplitLap={this.splitLap} 
+													laps={this.state.laps} />
 							</div>
 						</Grid>
 					</Grid>

@@ -22,6 +22,22 @@ export function exportAs(id, type){
     	});
 }
 
+export function joinLaps(id, dataSelected){
+	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/join/laps";
+
+	let indexLap1 = dataSelected[0].indexLap - 1;
+	let indexLap2 = dataSelected[1].indexLap - 1;
+
+	const url = path + "?index1=" + indexLap1 + "&index2=" + indexLap2;
+
+	return axios
+		.put(url)
+    	.then(res => res.data)
+    	.catch(err => {
+    		throw new Exception(err.response.data.description);
+    	});
+}
+
 export function removePoint(id, position, timeInMillis, index){
 	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/point";
 
