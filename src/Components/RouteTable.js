@@ -130,7 +130,7 @@ const toolbarStyles = theme => ({
 });
 
 let RouteTableToolbar = props => {
-  const { numSelected, classes, dataSize } = props;
+  const { numSelected, classes, dataSize, dataSelected } = props;
 
   return (
     <Toolbar
@@ -150,7 +150,7 @@ let RouteTableToolbar = props => {
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {
-          numSelected===2?
+          numSelected===2 && ( dataSelected[0].indexLap + 1 === dataSelected[1].indexLap || dataSelected[1].indexLap + 1 === dataSelected[0].indexLap ) ?
             <Tooltip title="Join">
               <IconButton aria-label="Join" onClick={() => props.handleJoinLaps()}>
                 <CallMergeIcon />
@@ -283,7 +283,7 @@ class RouteTable extends React.Component {
     let startTime = this.state.data[indexLapTable].startTime;
     let indexLap = this.state.data[indexLapTable].index;
     let objectSelected = {indexLap,startTime};
-    const selectDataIndex = dataSelected.indexOf(objectSelected);
+    const selectDataIndex = dataSelected.map(datum=>datum.indexLap).indexOf(objectSelected.indexLap);
 
     let newSelected = [];
     let newDataSelected = [];
@@ -333,7 +333,7 @@ class RouteTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, dataSelected } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
@@ -341,6 +341,7 @@ class RouteTable extends React.Component {
         <RouteTableToolbar  handleRemoveLaps={this.removeLaps} 
                             handleJoinLaps={this.joinLaps}
                             numSelected={selected.length} 
+                            dataSelected={dataSelected}
                             dataSize={data.length}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
