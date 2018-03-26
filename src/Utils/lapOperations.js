@@ -63,9 +63,9 @@ export function getLapsHeartRate(laps){
 export function getLapsElevations(laps){
   return laps.map(lap=> {
     return {
-        index: lap.index,
-        color: lap.color,
-        label: "Lap " + lap.index,
+      index: lap.index,
+      color: lap.color,
+      label: "Lap " + lap.index,
       tracks:lap.tracks.map(track=>[track.date, track.alt])
     }
   });

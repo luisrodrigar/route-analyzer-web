@@ -398,14 +398,14 @@ class RouteTable extends React.Component {
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={10} />
+                  <TableCell colSpan={11} />
                 </TableRow>
               )}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  colSpan={10}
+                  colSpan={11}
                   count={data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}

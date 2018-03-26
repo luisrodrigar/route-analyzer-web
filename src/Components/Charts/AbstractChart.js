@@ -38,12 +38,14 @@ export class AbstractChart extends React.Component{
       let childrenWithProps = [];
       if(this.props.children && Array.isArray(this.props.children)
           && this.props.children.filter(child=>child).length>0){
-        childrenWithProps = React.Children.map(this.props.children.filter(child=>child), child =>
+        childrenWithProps = React.Children.map(this.props.children.filter(child=>child), (child,index) =>
           React.cloneElement(child, {
             data:this.props.data, 
             laps:this.props.laps,
             dataLine: this.props.dataLine,
             height:this.props.height,
+            trackpoint:this.props.track,
+            handleMouseOver:index===0?this.props.handleMouseOver:null,
             xScale: scales.xScale,
             yScale: scales.yScale
           })
@@ -54,6 +56,7 @@ export class AbstractChart extends React.Component{
             laps:this.props.laps,
             dataLine: this.props.dataLine,
             height:this.props.height,
+            trackpoint:this.props.track,
             xScale: scales.xScale,
             yScale: scales.yScale
           });

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import {BrowserRouter as Router } from 'react-router-dom'
 import FileUploaderContainer from './Components/FileUploaderContainer';
 import RouteContainer from './Components/RouteContainer';
@@ -48,7 +47,6 @@ class App extends Component {
       <Router>
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Route Analyzer</h1>
         </header>
         <div className="App-intro">

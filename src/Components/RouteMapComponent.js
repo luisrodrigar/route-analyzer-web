@@ -1,7 +1,9 @@
+
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 import { compose, withProps, lifecycle } from "recompose";
-import { MarkerClusterer } from "react-google-maps/lib/components/addons/MarkerClusterer";
+import iconMarker from './marker_default.png';
+import './RouteMapComponent.css';
 
 const RouteMapComponent =  
   compose(
@@ -33,113 +35,124 @@ const RouteMapComponent =
                       {
                         strokeColor,
                         strokeOpacity: 3.0,
-                        strokeWeight: 3,
+                        strokeWeight: 6,
                       }
                     }
           />} 
         )
       }
-      <MarkerInfoViewComponent 
-        trackPoint={props.laps[0].tracks[0]}
-        keyMarker={"0_0"}
-        label={"A"}
-        handleMarkClick={props.handleMarkClick}
-        handleInfoClose={props.handleInfoClose}
-        handleRemoveMarker={props.handleRemoveMarker}
-        keys={props.keys}
-      />
-      <PositionNotFirstOrLastMarkerClustererComponent 
-        laps={props.laps} 
-        gridSize={80} 
-        minimumClusterSize={22}
-        handleMarkClick={props.handleMarkClick}
-        handleInfoClose={props.handleInfoClose}
-        handleRemoveMarker={props.handleRemoveMarker}
-        handleSplitLap={props.handleSplitLap}
-        keys={props.keys} 
-      />
-      <MarkerInfoViewComponent 
-        trackPoint={props.laps[props.laps.length-1].tracks[props.laps[props.laps.length-1].tracks.length-1]}
-        keyMarker={(props.laps.length-1)+"_"+(props.laps[props.laps.length-1].tracks.length-1)}
-        label={"B"}
-        handleMarkClick={props.handleMarkClick}
-        handleInfoClose={props.handleInfoClose}
-        handleRemoveMarker={props.handleRemoveMarker}
-        keys={props.keys}
-      />
+      {
+        props.laps.map( (lap) => {
+          let defaultIcon = iconMarker;
+          return lap.tracks.map((track)=>{
+            return <MarkerInfoViewComponent 
+              key={lap.index + "_" + track.index}
+              trackPoint={track}
+              indexLap={props.laps.indexOf(lap)}
+              indexTrackpoint={lap.tracks.indexOf(track)}
+              sizeLaps = {props.laps.length}
+              sizeTrackpoints = {lap.tracks.length}
+              handleMarkClick={props.handleMarkClick}
+              handleInfoClose={props.handleInfoClose}
+              handleSplitLap={props.handleSplitLap}
+              handleRemoveMarker={props.handleRemoveMarker}
+              handleMouseOver={props.handleMouseOver}
+              currentTrack={props.currentTrack}
+              defaultIcon={defaultIcon}
+              keys={props.keys}
+            />
+          })
+        })
+      }
     </GoogleMap>
   );
 
- class PositionNotFirstOrLastMarkerClustererComponent extends Component{
-
-  isFirstOrEndPosition(indexLap, indexPosition){
-    let lastIndexLap = this.props.laps.length-1;
-    let lastIndexPositionOfLastLap = this.props.laps[lastIndexLap].tracks.length-1;
-    return (indexPosition!==0 || indexLap!==0 ) 
-            && (indexLap !== lastIndexLap 
-                || indexPosition !== lastIndexPositionOfLastLap)
-  }
-
-  render(){
-    return (
-      <MarkerClusterer  
-        averageCenter 
-        gridSize={this.props.gridSize} 
-        minimumClusterSize={this.props.minimumClusterSize}
-      >
-      {
-        this.props.laps.map( (lap, indexLap) => {
-          return lap.tracks.map( (track, indexPosition) => {
-              return ((this.isFirstOrEndPosition(indexLap,indexPosition)) ?
-                      ( track.index > this.props.laps[indexLap].tracks[0].index 
-                        && track.index < this.props.laps[indexLap].tracks[this.props.laps[indexLap].tracks.length - 1 ].index ?
-                        (<MarkerInfoViewComponent 
-                          trackPoint={track}
-                          key={indexLap+"_"+indexPosition}
-                          keyMarker={indexLap+"_"+indexPosition}
-                          icon={'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'}
-                          handleMarkClick={this.props.handleMarkClick}
-                          handleInfoClose={this.props.handleInfoClose}
-                          handleRemoveMarker={this.props.handleRemoveMarker}
-                          handleSplitLap={this.props.handleSplitLap}
-                          keys={this.props.keys}
-                        />):
-                        (<MarkerInfoViewComponent 
-                          trackPoint={track}
-                          key={indexLap+"_"+indexPosition}
-                          keyMarker={indexLap+"_"+indexPosition}
-                          icon={'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png'}
-                          handleMarkClick={this.props.handleMarkClick}
-                          handleInfoClose={this.props.handleInfoClose}
-                          handleRemoveMarker={this.props.handleRemoveMarker}
-                          keys={this.props.keys}
-                        />)
-                      )
-                    :   null);
-            
-          }) 
-        })
-      }
-      </MarkerClusterer>
-    )
-  }
-}
-
 class MarkerInfoViewComponent extends Component{
 
+  constructor(props){
+    super(props);
+    this.isEnd = this.isEnd.bind(this);
+  }
+
+  containsKey(keys,key){
+    return keys.includes(key);
+  }; 
+
+  isStart(indexLap, indexTrackpoint){
+    switch(indexLap){
+      case 0:
+        switch(indexTrackpoint){
+          case 0:
+            return true;
+          default:
+            return false;
+        }
+      default:
+        return false;
+    }
+  }
+
+  isEnd(indexLap, indexTrackpoint){
+    const {sizeLaps,sizeTrackpoints} = this.props;
+    const lastLapIndex = sizeLaps-1;
+    const lastTrackpoint = sizeTrackpoints-1;
+    switch(indexLap){
+      case lastLapIndex:
+        switch(indexTrackpoint){
+          case lastTrackpoint:
+            return true;
+          default:
+            return false;
+        }
+      default:
+        return false;
+    }
+  }
+
+  isStartOrEndPoint(indexLap, indexTrackpoint){
+    return this.isStart(indexLap, indexTrackpoint) || this.isEnd(indexLap, indexTrackpoint);
+  }
+
   render(){
+    const {indexLap,indexTrackpoint,sizeTrackpoints} = this.props;
+    // key marker
+    const keyMarker = this.props.indexLap +"_"+this.props.indexTrackpoint;
+    const isStartPoint = this.isStart(indexLap, indexTrackpoint);
+    const isEndPoint = this.isEnd(indexLap, indexTrackpoint);
+    let label = null;
+    let icon = null;
+    // Start
+    if(isStartPoint)
+      label = "A";
+    // End
+    else if(isEndPoint)
+      label = "B";
+    // track points between start and end
+    else if(this.props.currentTrack !== keyMarker)
+      icon=this.props.defaultIcon;
+
+    // Only split lap functionality if its between start and end (not included) of a lap
+    let handleSplitLap = this.props.handleSplitLap;
+    if(isStartPoint || isEndPoint || (indexTrackpoint === (sizeTrackpoints-1) || indexTrackpoint === 0) )
+      handleSplitLap = null;
+
     return (
-      <Marker position={this.props.trackPoint.position}
-              onClick={()=>this.props.handleMarkClick(this.props.keyMarker)}
-              icon={this.props.icon}
-              label={this.props.label}
-              >
-              {this.props.keys.length > 0 && (this.props.keys.indexOf(this.props.keyMarker)!==-1) &&  
-                <InfoWindow onCloseClick={()=>this.props.handleInfoClose(this.props.keyMarker)}>
-                  <InfoViewContent  trackPoint={this.props.trackPoint} handleRemoveMarker={this.props.handleRemoveMarker} handleSplitLap={this.props.handleSplitLap} keyMarker={this.props.keyMarker}/>
-                </InfoWindow>
-              }
-      </Marker>
+        <Marker 
+                position={this.props.trackPoint.position}
+                onClick={()=>this.props.handleMarkClick(keyMarker)}
+                onMouseOver={()=>this.props.handleMouseOver(keyMarker)}
+                icon={icon}
+                label={label}
+                >
+                { this.props.keys.length > 0 && this.containsKey(this.props.keys,keyMarker) &&
+                  <InfoWindow onCloseClick={()=>this.props.handleInfoClose(keyMarker)}>
+                    <InfoViewContent  trackPoint={this.props.trackPoint} 
+                                      handleRemoveMarker={this.props.handleRemoveMarker} 
+                                      handleSplitLap={handleSplitLap} 
+                                      keyMarker={keyMarker}/>
+                  </InfoWindow>
+                }
+        </Marker>
     )
   }
 }

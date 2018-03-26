@@ -66,6 +66,7 @@ export class ElevationsChart extends React.Component {
                         padding = {40}
                         width = {this.state.width}
                         height = {this.state.height}
+                        track={this.props.track}
                         ticks={5}/>
       </MySizeGrid>
 		);

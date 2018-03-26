@@ -22,8 +22,11 @@ class RouteContainer extends Component {
 		this.splitLap = this.splitLap.bind(this);
 		this.removeLaps = this.removeLaps.bind(this);
 		this.joinLaps = this.joinLaps.bind(this);
+		this.selectTrackpoint =this.selectTrackpoint.bind(this);
 		this.state = {
-			activity: {}, 
+			activity: {},
+			idLap: null,
+			idTrackpoint:null,
 			laps: []
 		};
 		this.setActivityObject(props.id);
@@ -106,8 +109,20 @@ class RouteContainer extends Component {
   			});
   	}
 
+  	selectTrackpoint(keyMarker){
+  		let idLap = keyMarker.split('_')[0];
+  		let idTrackpoint = keyMarker.split('_')[1];
+  		this.setState({
+  			idLap,
+  			idTrackpoint
+  		})
+  	}
+
 	render(){
 		if(this.state.activity && this.state.activity.laps){
+			let trackObject = this.state.idLap && this.state.idTrackpoint ? 
+						this.state.laps[this.state.idLap].tracks[this.state.idTrackpoint] 
+						: null;
 			return (
 				<div>
 					<Grid container spacing={8}>
@@ -128,6 +143,8 @@ class RouteContainer extends Component {
 							<div className="RouteMap">
 								<RouteMapContainer 	handleRemoveMarker={this.removePosition} 
 													handleSplitLap={this.splitLap} 
+													handleMouseOver={this.selectTrackpoint}
+													currentTrack={this.state.idLap+"_"+this.state.idTrackpoint}
 													laps={this.state.laps} />
 							</div>
 						</Grid>
@@ -135,13 +152,20 @@ class RouteContainer extends Component {
 					<Grid container spacing={8}>
 						<ElevationsChart 	laps={this.state.laps}
 											yTitle={'Altitude (m)'}
-											xTitle={'Time (hh:mm:ss)'}/>
+											xTitle={'Time (hh:mm:ss)'}
+											track={trackObject}
+											/>
 						<HeartRateChart 	laps={this.state.laps}
 											yTitle={'Heart Rate (bpm)'}
-											xTitle={'Time (hh:mm:ss)'}/>
+											xTitle={'Time (hh:mm:ss)'}
+											track={trackObject}
+											/>
 						<SpeedChart		 	laps={this.state.laps}
 											yTitle={'Speed (m/s)'}
-											xTitle={'Time (hh:mm:ss)'}/>
+											xTitle={'Time (hh:mm:ss)'}
+											handleMouseOver={this.selectTrackpoint}
+											track={trackObject}
+											/>
 					</Grid>
 				</div>
 			);
