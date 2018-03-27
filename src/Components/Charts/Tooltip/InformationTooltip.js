@@ -64,15 +64,13 @@ export class InformationTooltip extends React.Component {
 		      		if(track[1]===d[1] && track[0]===d[0]){
 		      			indexTrackpoint = indexTrack;
 		      			return true;
-		      		}
-		      		if(lap.tracks.length===indexTrackpoint)
+		      		} else
 		      			return false;
 		      	})
 		      	if(indexTrackpoint){
 		      		indexLap = index;
 		      		return true;
-		      	}
-		      	if(this.props.laps.length===index)
+		      	}else 
 		      		return false;
 		    })
 		    if(isFound){
