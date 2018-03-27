@@ -1,4 +1,5 @@
 import React    from 'react';
+import InformationTooltip from './Tooltip/InformationTooltip';
 import * as d3  from "d3";
 
 export class DataArea extends React.Component {
@@ -24,6 +25,11 @@ export class DataArea extends React.Component {
 
 	render(){
     let minYValue = d3.min(this.props.data, d => d[1]);
+    let date = null, data=null;
+    if(this.props.track){
+      date = this.props.track.date;
+      data = this.props.track.alt;
+    }
 		return(
       <g className={'areas'}>
       { 
@@ -31,6 +37,28 @@ export class DataArea extends React.Component {
           lap => this.renderArea(lap, minYValue, this.props.xScale, this.props.yScale)
         )
       }
+      <InformationTooltip ref="tooltip" 
+                            xScale={this.props.xScale}
+                            yScale={this.props.yScale}
+                            width={this.props.width}
+                            height={this.props.height}
+                            padding={this.props.padding}
+                            handleMouseOver={this.props.handleMouseOver}
+                            laps={this.props.laps} 
+                            data={this.props.data}
+                            legend={this.props.legend}
+                            trackpoint={{
+                              date,
+                              data
+                            }}
+        />
+        <rect className="overlay" 
+              width={this.props.width-(2*this.props.padding)} 
+              height={this.props.height-(2*this.props.padding)}
+              style={{fill: 'none', pointerEvents: 'all'}}
+              onMouseOver={(event)=>this.refs.tooltip.mouseMove(event)}
+              onMouseMove={(event)=>this.refs.tooltip.mouseMove(event)}
+        />
       </g>
 		);
   }

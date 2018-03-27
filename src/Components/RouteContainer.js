@@ -55,6 +55,8 @@ class RouteContainer extends Component {
 		this.saveColorsIfNotInformed(activityObject, laps);
 		this.setState({
 			activity: activityObject,
+			idLap: null,
+			idTrackpoint:null,
 			laps: laps
 		});
 	}
@@ -153,11 +155,13 @@ class RouteContainer extends Component {
 						<ElevationsChart 	laps={this.state.laps}
 											yTitle={'Altitude (m)'}
 											xTitle={'Time (hh:mm:ss)'}
+											handleMouseOver={this.selectTrackpoint}
 											track={trackObject}
 											/>
 						<HeartRateChart 	laps={this.state.laps}
 											yTitle={'Heart Rate (bpm)'}
 											xTitle={'Time (hh:mm:ss)'}
+											handleMouseOver={this.selectTrackpoint}
 											track={trackObject}
 											/>
 						<SpeedChart		 	laps={this.state.laps}

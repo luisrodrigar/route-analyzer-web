@@ -73,6 +73,7 @@ export class SpeedChart extends React.Component {
                         height = {this.state.height}
                         track={this.props.track}
                         handleMouseOver={this.props.handleMouseOver}
+                        legend={'m/s'}
                         ticks={5}/>
       </MySizeGrid>
 		);

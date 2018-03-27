@@ -72,6 +72,8 @@ export class HeartRateChart extends React.Component {
                         width = {this.state.width}
                         height = {this.state.height}
                         track={this.props.track}
+                        handleMouseOver={this.props.handleMouseOver}
+                        legend={'bpm'}
                         ticks={5}/>
       </MySizeGrid>
 		);

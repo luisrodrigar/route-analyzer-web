@@ -1,4 +1,5 @@
 import React    from 'react';
+import InformationTooltip from './Tooltip/InformationTooltip';
 
 export class DataBar extends React.Component {
 
@@ -20,6 +21,11 @@ export class DataBar extends React.Component {
 	};
 
 	render(){
+    let date = null, data=null;
+    if(this.props.track){
+      date = this.props.track.date;
+      data = this.props.track.bpm;
+    }
 		return(
       <g className={'bars'}>
       { 
@@ -27,6 +33,28 @@ export class DataBar extends React.Component {
           lap => this.renderBarLap(lap, this.props.xScale, this.props.yScale)
         )
       }
+        <InformationTooltip ref="tooltip" 
+                            xScale={this.props.xScale}
+                            yScale={this.props.yScale}
+                            width={this.props.width}
+                            height={this.props.height}
+                            padding={this.props.padding}
+                            handleMouseOver={this.props.handleMouseOver}
+                            laps={this.props.laps} 
+                            data={this.props.data}
+                            legend={this.props.legend}
+                            trackpoint={{
+                              date,
+                              data
+                            }}
+        />
+        <rect className="overlay" 
+              width={this.props.width-(2*this.props.padding)} 
+              height={this.props.height-(2*this.props.padding)}
+              style={{fill: 'none', pointerEvents: 'all'}}
+              onMouseOver={(event)=>this.refs.tooltip.mouseMove(event)}
+              onMouseMove={(event)=>this.refs.tooltip.mouseMove(event)}
+        />
       </g>
 		);
   }

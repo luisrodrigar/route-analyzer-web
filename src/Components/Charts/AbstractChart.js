@@ -44,7 +44,7 @@ export class AbstractChart extends React.Component{
             laps:this.props.laps,
             dataLine: this.props.dataLine,
             height:this.props.height,
-            trackpoint:this.props.track,
+            track:this.props.track,
             handleMouseOver:index===0?this.props.handleMouseOver:null,
             xScale: scales.xScale,
             yScale: scales.yScale
@@ -56,7 +56,7 @@ export class AbstractChart extends React.Component{
             laps:this.props.laps,
             dataLine: this.props.dataLine,
             height:this.props.height,
-            trackpoint:this.props.track,
+            track:this.props.track,
             xScale: scales.xScale,
             yScale: scales.yScale
           });

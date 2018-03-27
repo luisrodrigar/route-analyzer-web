@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 import { compose, withProps, lifecycle } from "recompose";
 import iconMarker from './marker_default.png';
+import iconMarkerSelected from './marker_selected.png';
 import './RouteMapComponent.css';
 
 const RouteMapComponent =  
@@ -130,6 +131,8 @@ class MarkerInfoViewComponent extends Component{
     // track points between start and end
     else if(this.props.currentTrack !== keyMarker)
       icon=this.props.defaultIcon;
+    else
+      icon=iconMarkerSelected;
 
     // Only split lap functionality if its between start and end (not included) of a lap
     let handleSplitLap = this.props.handleSplitLap;
