@@ -2,8 +2,10 @@
 import {Exception} from './Exception'
 import axios from 'axios';
 
+const DIR_BASE = "http://localhost:8080/RouteAnalyzer";
+
 export function get(id){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id ;
+	const path = DIR_BASE + "/activity/" + id ;
 	return axios
 		.get(path)
     	.then(res => res.data)
@@ -13,7 +15,7 @@ export function get(id){
 }
 
 export function exportAs(id, type){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id + "/export/" + type ;
+	const path = DIR_BASE + "/activity/" + id + "/export/" + type ;
 	return axios
 		.get(path)
     	.then(res => res.data)
@@ -23,12 +25,11 @@ export function exportAs(id, type){
 }
 
 export function joinLaps(id, dataSelected){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/join/laps";
-
 	let indexLap1 = dataSelected[0].indexLap - 1;
 	let indexLap2 = dataSelected[1].indexLap - 1;
 
-	const url = path + "?index1=" + indexLap1 + "&index2=" + indexLap2;
+	const url = DIR_BASE + "/activity/" + id +"/join/laps?index1=" 
+		+ indexLap1 + "&index2=" + indexLap2;
 
 	return axios
 		.put(url)
@@ -39,16 +40,12 @@ export function joinLaps(id, dataSelected){
 }
 
 export function removePoint(id, position, timeInMillis, index){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/point";
-
-	const latParam = "lat="+position.lat;
-	const lngParam = "lng="+position.lng;
-
-	const positionParam = latParam+"&"+lngParam;
-	const timeInMillisParam = isNaN(timeInMillis) ? null : "timeInMillis=" + timeInMillis ;
+	const positionParam = getPositionParams(position);
+	const time = !timeInMillis || isNaN(timeInMillis) ? null : "timeInMillis=" + timeInMillis ;
 	const indexParam = "index="+index;
 	
-	const url = path + "?" + positionParam + (timeInMillisParam ? "&" + timeInMillisParam : "&timeInMillis=") + "&" + indexParam;
+	const url = DIR_BASE + "/activity/" + id +"/remove/point?" 
+		+ positionParam + (time ? "&" + time : "&timeInMillis=") + "&" + indexParam;
 
 	return axios
 		.put(url)
@@ -59,16 +56,11 @@ export function removePoint(id, position, timeInMillis, index){
 }
 
 export function splitLap(id, position, timeInMillis, index){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/split/lap";
-
-	const latParam = "lat="+position.lat;
-	const lngParam = "lng="+position.lng;
-
-	const positionParam = latParam+"&"+lngParam;
-	const timeInMillisParam = isNaN(timeInMillis) ? null : "timeInMillis=" + timeInMillis ;
+	const positionParam = getPositionParams(position);
+	const time = !timeInMillis || isNaN(timeInMillis) ? null : "timeInMillis=" + timeInMillis ;
 	const indexParam = "index="+index;
 	
-	const url = path + "?" + positionParam + (timeInMillisParam ? "&" + timeInMillisParam : "&timeInMillis=") + "&" + indexParam;
+	const url = DIR_BASE + "/activity/" + id +"/split/lap?" + positionParam + "&" + indexParam + (time ? "&" + time : "&timeInMillis=");
 
 	return axios
 		.put(url)
@@ -79,8 +71,7 @@ export function splitLap(id, position, timeInMillis, index){
 }
 
 export function removeLaps(id,dataSelected){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/remove/laps";
-	
+
 	const indexLaps = dataSelected.map(lap => {
 		return lap.indexLap;
 	}).join(",");
@@ -89,7 +80,7 @@ export function removeLaps(id,dataSelected){
 		return lap.startTime?lap.startTime:null;
 	}).join(",");
 
-	const url = path + "?date=" + startTimeLaps + "&index=" + indexLaps;
+	const url = DIR_BASE + "/activity/" + id +"/remove/laps?date=" + startTimeLaps + "&index=" + indexLaps;
 
 	return axios
 		.put(url)
@@ -100,14 +91,15 @@ export function removeLaps(id,dataSelected){
 }
 
 export function setColors(id, data){
-	const path = "http://localhost:8080/RouteAnalyzer/activity/" + id +"/color/laps";
-
-	const url = path + "?data=" + data;
-
+	const url = DIR_BASE + "/activity/" + id +"/color/laps?data=" + data;
 	return axios
 		.put(url)
 		.then()
     	.catch(err => {
-    		throw new Exception(err.response.data.description);
+    		throw new Exception("It cannot be posible to set the colors");
     	});
+}
+
+function getPositionParams(position){
+	return "lat="+position.lat+"&lng="+position.lng;
 }

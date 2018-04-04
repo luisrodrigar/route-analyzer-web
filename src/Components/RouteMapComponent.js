@@ -1,10 +1,30 @@
-
-import React, { Component } from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
-import { compose, withProps, lifecycle } from "recompose";
-import iconMarker from './marker_default.png';
-import iconMarkerSelected from './marker_selected.png';
+import React, { Component }               from 'react';
+import { withScriptjs, withGoogleMap, 
+              GoogleMap, Polyline, 
+              Marker, InfoWindow }        from "react-google-maps";
+import { compose, withProps, lifecycle }  from "recompose";
+import { connect }                        from "react-redux";
+import { updateTrackpoint }               from "../actions/index";
+import { getNearestPosition }       from "../Utils/operations";
+import iconMarkerSelected                 from '../resources/marker_selected.png';
 import './RouteMapComponent.css';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateTrackpoint: (idLap, idTrackpoint) => dispatch(updateTrackpoint(idLap, idTrackpoint))
+  };
+};
+
+const handleMouseOver = (event,props) => {
+  const lat = event.latLng.lat();
+  const lng = event.latLng.lng();
+  const position = {
+    lat,
+    lng,
+  };
+  let trackpointLocationInLap = getNearestPosition(props.laps, position);
+  props.updateTrackpoint(trackpointLocationInLap.indexLap, trackpointLocationInLap.indexTrackpoint);
+}
 
 const RouteMapComponent =  
   compose(
@@ -36,15 +56,16 @@ const RouteMapComponent =
                       {
                         strokeColor,
                         strokeOpacity: 3.0,
-                        strokeWeight: 6,
+                        strokeWeight: 8,
                       }
                     }
-          />} 
-        )
+                    onMouseOver={(event)=>handleMouseOver(event, props)}
+                    onMouseOut={(event)=>handleMouseOver(event, props)}
+          />
+        })
       }
       {
         props.laps.map( (lap) => {
-          let defaultIcon = iconMarker;
           return lap.tracks.map((track)=>{
             return <MarkerInfoViewComponent 
               key={lap.index + "_" + track.index}
@@ -57,9 +78,7 @@ const RouteMapComponent =
               handleInfoClose={props.handleInfoClose}
               handleSplitLap={props.handleSplitLap}
               handleRemoveMarker={props.handleRemoveMarker}
-              handleMouseOver={props.handleMouseOver}
               currentTrack={props.currentTrack}
-              defaultIcon={defaultIcon}
               keys={props.keys}
             />
           })
@@ -73,6 +92,7 @@ class MarkerInfoViewComponent extends Component{
   constructor(props){
     super(props);
     this.isEnd = this.isEnd.bind(this);
+    this.isRenderedPoint = this.isRenderedPoint.bind(this);
   }
 
   containsKey(keys,key){
@@ -114,6 +134,11 @@ class MarkerInfoViewComponent extends Component{
     return this.isStart(indexLap, indexTrackpoint) || this.isEnd(indexLap, indexTrackpoint);
   }
 
+  isRenderedPoint(){
+    return this.isStartOrEndPoint(this.props.indexLap, this.props.indexTrackpoint) || 
+        this.props.currentTrack === this.props.indexLap +"_"+this.props.indexTrackpoint;
+  }
+
   render(){
     const {indexLap,indexTrackpoint,sizeTrackpoints} = this.props;
     // key marker
@@ -129,34 +154,34 @@ class MarkerInfoViewComponent extends Component{
     else if(isEndPoint)
       label = "B";
     // track points between start and end
-    else if(this.props.currentTrack !== keyMarker)
-      icon=this.props.defaultIcon;
-    else
+    else if(this.props.currentTrack === keyMarker)
       icon=iconMarkerSelected;
+      
 
     // Only split lap functionality if its between start and end (not included) of a lap
     let handleSplitLap = this.props.handleSplitLap;
     if(isStartPoint || isEndPoint || (indexTrackpoint === (sizeTrackpoints-1) || indexTrackpoint === 0) )
       handleSplitLap = null;
-
-    return (
-        <Marker 
-                position={this.props.trackPoint.position}
-                onClick={()=>this.props.handleMarkClick(keyMarker)}
-                onMouseOver={()=>this.props.handleMouseOver(keyMarker)}
-                icon={icon}
-                label={label}
-                >
-                { this.props.keys.length > 0 && this.containsKey(this.props.keys,keyMarker) &&
-                  <InfoWindow onCloseClick={()=>this.props.handleInfoClose(keyMarker)}>
-                    <InfoViewContent  trackPoint={this.props.trackPoint} 
-                                      handleRemoveMarker={this.props.handleRemoveMarker} 
-                                      handleSplitLap={handleSplitLap} 
-                                      keyMarker={keyMarker}/>
-                  </InfoWindow>
-                }
-        </Marker>
-    )
+    if(this.isRenderedPoint())
+      return (
+          <Marker 
+                  position={this.props.trackPoint.position}
+                  onClick={()=>this.props.handleMarkClick(keyMarker)}
+                  icon={icon}
+                  label={label}
+                  >
+                  { this.props.keys.length > 0 && this.containsKey(this.props.keys,keyMarker) &&
+                    <InfoWindow onCloseClick={()=>this.props.handleInfoClose(keyMarker)}>
+                      <InfoViewContent  trackPoint={this.props.trackPoint} 
+                                        handleRemoveMarker={this.props.handleRemoveMarker} 
+                                        handleSplitLap={handleSplitLap} 
+                                        keyMarker={keyMarker}/>
+                    </InfoWindow>
+                  }
+          </Marker>
+      )
+    else 
+      return null;
   }
 }
 
@@ -191,4 +216,4 @@ class InfoViewLineComment extends Component{
   }
 }
 
-export default RouteMapComponent;
+export default connect(null,mapDispatchToProps)(RouteMapComponent);

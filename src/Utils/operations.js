@@ -1,4 +1,4 @@
-import {getColorRandom} from './materialColors';
+import {getColorRandom} from './colors';
 
 export function getLapsTrackPoints(laps){
   let newLaps = laps.map(lap => {
@@ -6,8 +6,8 @@ export function getLapsTrackPoints(laps){
       return {
             index:lap.index,
             tracks:getLapTrackPoint(lap),
-            color:lap.color?lap.color:null,
-            lightColor: lap.lightColor?lap.lightColor:null,
+            color:lap.color,
+            lightColor: lap.lightColor,
             startTime: lap.startTime,
             totalTime: lap.totalTimeSeconds,
             distance: lap.distanceMeters,
@@ -19,22 +19,25 @@ export function getLapsTrackPoints(laps){
             intensity: lap.intensity
       }
   });
-  let currentColors = newLaps.map(lap=>{
+  return newLaps;
+}
+
+export function setLapColors(laps){
+  let currentColors = laps.map(lap=>{
     if(lap.color&&lap.lightColor) 
       return [lap.color,lap.lightColor]
     else
       return null;
   }).filter(item=>item);
-  let numLapsWithoutColor = newLaps.filter(lap=>!lap.color&&!lap.lightColor).length;
+  let numLapsWithoutColor = laps.filter(lap=>!lap.color&&!lap.lightColor).length;
   const colors = getColorRandom(numLapsWithoutColor, currentColors);
   let index = 0;
-  newLaps.forEach(lap=>{
+  laps.forEach(lap=>{
     if(!lap.color && !lap.lightColor){
       lap.color = colors[index][0];
       lap.lightColor = colors[index++][1];
     }
   });
-  return newLaps;
 }
 
 export function getLapsSpeed(laps){
@@ -171,7 +174,29 @@ function getLapTrackPoint(lap){
   });
 }
 
-export function getDistanceBetweenPoints(point1, point2){
+export function getNearestPosition(laps,position){
+  let indexLap =null, indexTrackpoint = null, minDistance = Number.POSITIVE_INFINITY;
+  laps.forEach((lap, eachIndexLap)=>{
+    lap.tracks.forEach((track,eachIndexTrackpoint)=>{
+      let eachPosition = {
+        lat: track.position.lat,
+        lng: track.position.lng,
+      };
+      let currentMin = getDistanceBetweenPoints(eachPosition,position);
+      if(currentMin<minDistance){
+        indexTrackpoint = eachIndexTrackpoint;
+        indexLap = eachIndexLap;
+        minDistance = currentMin;
+      }
+    })
+  })
+  return {
+    indexLap,
+    indexTrackpoint
+  }
+}
+
+function getDistanceBetweenPoints(point1, point2){
   // Convert degrees to radians
   let latP1 = degrees2Radians(point1.lat), lngP1 = degrees2Radians(point1.lng);
   let latP2 = degrees2Radians(point2.lat), lngP2 = degrees2Radians(point2.lng);

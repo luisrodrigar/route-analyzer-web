@@ -74,7 +74,7 @@ export class InformationTooltip extends React.Component {
 		      		return false;
 		    })
 		    if(isFound){
-			    this.props.handleMouseOver(indexLap+"_"+indexTrackpoint);
+			    this.props.handleMouseOver(indexLap,indexTrackpoint);
 			    this.setState({
 			      showFocus:true,
 			      x2,
@@ -94,25 +94,26 @@ export class InformationTooltip extends React.Component {
 	    if(this.state.date && this.state.data){
 	    	xTranslate = this.props.xScale(this.state.date);
 	    	yTranslate = this.props.yScale(this.state.data);
-	    }
-		return(
-			<g	className='focus'
-	          	style={{opacity:0.7,display:this.state.showFocus?'block':'none'}}
-	          	transform={this.state.date && this.state.data ? 'translate('+xTranslate+','+yTranslate+')' : null}
-	        >
-	        <circle r='2.5' style={{fill:'none',stroke:'black'}}></circle>
-	        <line className='x'
-	              style={{fill: 'none', stroke: 'black', strokeWidth: '1.5px', strokeDasharray: '3, 3'}}
-	              x1='0' y1='0' y2='0' x2={this.state.x2} >
-	        </line>
-	        <line className='y'
-	              style={{fill: 'none', stroke: 'black', strokeWidth: '1.5px', strokeDasharray: '3, 3'}}
-	              x1='0' x2='0' y1='0' y2={this.state.y2}>
-	        </line>
-	        <text x='9' y='-10' dy='.35em'>{Math.round(this.state.data*1000)/1000 + " " + this.props.legend}</text>
-	        <text x='9' y='5' dy='.35em'>{this.state.date?new Date(this.state.date).toLocaleTimeString():null}</text>
-	      	</g>
-	    );
+			return(
+				<g	className='focus'
+		          	style={{opacity:0.7,display:this.state.showFocus?'block':'none'}}
+		          	transform={this.state.date && this.state.data ? 'translate('+xTranslate+','+yTranslate+')' : null}
+		        >
+		        <circle r='2.5' style={{fill:'none',stroke:'black'}}></circle>
+		        <line className='x'
+		              style={{fill: 'none', stroke: 'black', strokeWidth: '1.5px', strokeDasharray: '3, 3'}}
+		              x1='0' y1='0' y2='0' x2={this.state.x2} >
+		        </line>
+		        <line className='y'
+		              style={{fill: 'none', stroke: 'black', strokeWidth: '1.5px', strokeDasharray: '3, 3'}}
+		              x1='0' x2='0' y1='0' y2={this.state.y2}>
+		        </line>
+		        <text x='9' y='-10' dy='.35em'>{Math.round(this.state.data*1000)/1000 + " " + this.props.legend}</text>
+		        <text x='9' y='5' dy='.35em'>{this.state.date?new Date(this.state.date).toLocaleTimeString():null}</text>
+		      	</g>
+		    );
+	    } else
+	    	return null;
 	}
 }
 

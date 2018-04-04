@@ -2,10 +2,25 @@ import React    from 'react';
 import sizeMe from 'react-sizeme';
 import Grid from 'material-ui/Grid';
 import BarChart from './Charts/BarChart'
-import {getLapsHeartRate, getHeartRateData, getAvgBpm} from '../Utils/lapOperations';
+import {getLapsHeartRate, getHeartRateData, getAvgBpm} from '../Utils/operations';
+import { connect } from "react-redux";
+import { updateTrackpoint } from "../actions/index";
 
 // Using a react-sizeme library to get width and height values => Handling on resize event
 const MySizeGrid = sizeMe({ monitorHeight: true })(Grid);
+
+const mapStateToProps = state => {
+  return {
+    currentTrackpoint:  state.container.currentTrackpoint,
+    laps:               state.container.laps
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateTrackpoint: (idLap, idTrackpoint) => dispatch(updateTrackpoint(idLap, idTrackpoint))
+  };
+};
 
 export class HeartRateChart extends React.Component {
 
@@ -19,7 +34,7 @@ export class HeartRateChart extends React.Component {
       bpms:   heartRates,
       laps:   lapsHeartRate,
       avg: avgLine,
-      width:  500,
+      width:  1400,
       height: 200,
     };
   }
@@ -61,19 +76,19 @@ export class HeartRateChart extends React.Component {
       <MySizeGrid 
             ref={ref=>this.chartGrid = ref}
             item
-            xs={4}
-            style={{maxHeight:'500px', minWidth:'420px'}}>
-            <BarChart   data={this.state.bpms} 
+            xs={12}
+            style={{maxHeight:'200px', minWidth:'500px'}}>
+            <BarChart   textYAxis={this.props.yTitle}
+                        textXAxis={this.props.xTitle}
+                        track={this.props.currentTrackpoint}
+                        handleMouseOver={this.props.updateTrackpoint}
+                        data={this.state.bpms} 
                         laps={this.state.laps}
                         dataLine={this.state.avg}
-                        textYAxis={this.props.yTitle}
-                        textXAxis={this.props.xTitle}
-                        padding = {40}
                         width = {this.state.width}
                         height = {this.state.height}
-                        track={this.props.track}
-                        handleMouseOver={this.props.handleMouseOver}
                         legend={'bpm'}
+                        padding = {40}
                         ticks={5}/>
       </MySizeGrid>
 		);
@@ -81,4 +96,4 @@ export class HeartRateChart extends React.Component {
 
 }
 
-export default HeartRateChart;
+export default connect(mapStateToProps,mapDispatchToProps)(HeartRateChart);

@@ -1,5 +1,5 @@
 import React    from 'react';
-import InformationTooltip from './Tooltip/InformationTooltip';
+import InformationTooltip from '../Tooltip/InformationTooltip';
 import * as d3  from "d3";
 
 export class DataArea extends React.Component {

@@ -1,8 +1,8 @@
 import React from 'react';
 import AbstractChart from './AbstractChart';
-import DataLine from './DataLine';
-import DataMultiLine from './DataMultiLine';
-import {getColorObject} from '../../Utils/materialColors';
+import DataLine from './Data/DataLine';
+import DataMultiLine from './Data/DataMultiLine';
+import {getColorObject} from '../../Utils/colors';
 
 export class LineChart extends React.Component{
     

@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
 import {get, removePoint, removeLaps, setColors, splitLap, joinLaps} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
-import {RouteMapContainer} from './RouteMapContainer';
-import {getLapsTrackPoints} from '../Utils/lapOperations';
+import RouteMapContainer from './RouteMapContainer';
+import {getLapsTrackPoints, setLapColors} from '../Utils/operations';
 import Grid from 'material-ui/Grid';
 import RouteTable from './RouteTable';
 import ElevationsChart from './ElevationsChart';
 import HeartRateChart from './HeartRateChart';
 import SpeedChart from './SpeedChart';
+import { connect } from "react-redux";
+import { setActivity } from "../actions/index";
 import './RouteContainer.css';
 
+const mapStateToProps = state => {
+  return { 
+    activity: 		state.container.activity,
+    idLap: 			state.container.idLap,
+    idTrackpoint: 	state.container.idTrackpoint
+  };
+};
 
+const mapDispatchToProps = dispatch => {
+  return {
+    setActivity: activity => dispatch(setActivity(activity))
+  };
+};
 
 class RouteContainer extends Component {
 
@@ -22,13 +36,6 @@ class RouteContainer extends Component {
 		this.splitLap = this.splitLap.bind(this);
 		this.removeLaps = this.removeLaps.bind(this);
 		this.joinLaps = this.joinLaps.bind(this);
-		this.selectTrackpoint =this.selectTrackpoint.bind(this);
-		this.state = {
-			activity: {},
-			idLap: null,
-			idTrackpoint:null,
-			laps: []
-		};
 		this.setActivityObject(props.id);
 	}
 
@@ -38,27 +45,21 @@ class RouteContainer extends Component {
 	    }
 	}
 
-	saveLapsColors(activityObject, laps){
-		let data = laps.map((lap,index)=>lap.color.substring(1)+"-"+lap.lightColor.substring(1)).join('@');
-		setColors(activityObject.id, data)
-	}
-
-	saveColorsIfNotInformed(activityObject, laps){
+	saveColorsIfNotInformed(activityObject){
 		if(activityObject.laps && activityObject.laps.length>0
 			&& activityObject.laps.filter(lap=> !lap.color).length>0){
-			this.saveLapsColors(activityObject, laps);
+			let data = activityObject.laps
+				.map((lap,index)=>
+					lap.color.substring(1)+"-"+lap.lightColor.substring(1)
+				).join('@');
+			setColors(activityObject.id, data)
 		}
 	}
 
 	handleActivityResponse(activityObject){
-		let laps = getLapsTrackPoints(activityObject.laps);
-		this.saveColorsIfNotInformed(activityObject, laps);
-		this.setState({
-			activity: activityObject,
-			idLap: null,
-			idTrackpoint:null,
-			laps: laps
-		});
+		setLapColors(activityObject.laps);
+		this.saveColorsIfNotInformed(activityObject);
+		this.props.setActivity(activityObject);
 	}
 
 	setActivityObject(id){
@@ -111,26 +112,17 @@ class RouteContainer extends Component {
   			});
   	}
 
-  	selectTrackpoint(keyMarker){
-  		let idLap = keyMarker.split('_')[0];
-  		let idTrackpoint = keyMarker.split('_')[1];
-  		this.setState({
-  			idLap,
-  			idTrackpoint
-  		})
-  	}
-
 	render(){
-		if(this.state.activity && this.state.activity.laps){
-			let trackObject = this.state.idLap && this.state.idTrackpoint ? 
-						this.state.laps[this.state.idLap].tracks[this.state.idTrackpoint] 
+		if(this.props.activity && this.props.activity.laps){
+			let track = this.props.idLap && this.props.idTrackpoint ? 
+						this.props.activity.laps[this.props.idLap].tracks[this.props.idTrackpoint] 
 						: null;
+			let laps = getLapsTrackPoints(this.props.activity.laps);
 			return (
 				<div>
 					<Grid container spacing={8}>
 						<Grid item xs={12}>
-							<DownloadFileComponent 	id={this.state.activity.id} 
-													type={this.state.activity.sourceXmlType} />
+							<DownloadFileComponent/>
 						</Grid>
 					</Grid>
 					<Grid container spacing={16}>
@@ -138,7 +130,8 @@ class RouteContainer extends Component {
 							<div className="RouteTable">
 								<RouteTable handleRemoveLaps={this.removeLaps} 
 											handleJoinLaps={this.joinLaps} 
-											laps={this.state.laps}/>
+											laps={laps}
+								/>
 							</div>
 						</Grid>
 						<Grid item xs={5}>
@@ -146,30 +139,33 @@ class RouteContainer extends Component {
 								<RouteMapContainer 	handleRemoveMarker={this.removePosition} 
 													handleSplitLap={this.splitLap} 
 													handleMouseOver={this.selectTrackpoint}
-													currentTrack={this.state.idLap+"_"+this.state.idTrackpoint}
-													laps={this.state.laps} />
+								/>
 							</div>
 						</Grid>
 					</Grid>
-					<Grid container spacing={8}>
-						<ElevationsChart 	laps={this.state.laps}
-											yTitle={'Altitude (m)'}
+					<Grid container spacing={24}>
+						<Grid item xs={12}>
+						<ElevationsChart	yTitle={'Altitude (m)'}
 											xTitle={'Time (hh:mm:ss)'}
-											handleMouseOver={this.selectTrackpoint}
-											track={trackObject}
-											/>
-						<HeartRateChart 	laps={this.state.laps}
-											yTitle={'Heart Rate (bpm)'}
+											currentTrack={track}
+						/>
+						</Grid>
+					</Grid>
+					<Grid container spacing={24}>
+						<Grid item xs={12}>
+						<HeartRateChart 	yTitle={'Heart Rate (bpm)'}
 											xTitle={'Time (hh:mm:ss)'}
-											handleMouseOver={this.selectTrackpoint}
-											track={trackObject}
-											/>
-						<SpeedChart		 	laps={this.state.laps}
-											yTitle={'Speed (m/s)'}
+											currentTrack={track}
+						/>
+						</Grid>
+					</Grid>
+					<Grid container spacing={24}>
+						<Grid item xs={12}>
+						<SpeedChart		 	yTitle={'Speed (m/s)'}
 											xTitle={'Time (hh:mm:ss)'}
-											handleMouseOver={this.selectTrackpoint}
-											track={trackObject}
-											/>
+											currentTrack={track}
+						/>
+						</Grid>
 					</Grid>
 				</div>
 			);
@@ -183,4 +179,4 @@ class RouteContainer extends Component {
 
 }
 
-export default RouteContainer;
+export default connect(mapStateToProps,mapDispatchToProps)(RouteContainer);

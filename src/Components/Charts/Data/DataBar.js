@@ -1,5 +1,5 @@
 import React    from 'react';
-import InformationTooltip from './Tooltip/InformationTooltip';
+import InformationTooltip from '../Tooltip/InformationTooltip';
 
 export class DataBar extends React.Component {
 

@@ -1,11 +1,26 @@
 import React    from 'react';
 import sizeMe from 'react-sizeme';
 import Grid from 'material-ui/Grid';
-import AreaChart from './Charts/AreaChart'
-import {getElevationData, getLapsElevations} from '../Utils/lapOperations';
+import AreaChart from './Charts/AreaChart';
+import {getElevationData, getLapsElevations} from '../Utils/operations';
+import { connect } from "react-redux";
+import { updateTrackpoint } from "../actions/index";
 
 // Using a react-sizeme library to get width and height values => Handling on resize event
 const MySizeGrid = sizeMe({ monitorHeight: true })(Grid);
+
+const mapStateToProps = state => {
+  return {
+    currentTrackpoint:  state.container.currentTrackpoint,
+    laps:               state.container.laps
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateTrackpoint: (idLap, idTrackpoint) => dispatch(updateTrackpoint(idLap, idTrackpoint))
+  };
+};
 
 export class ElevationsChart extends React.Component {
 
@@ -17,7 +32,7 @@ export class ElevationsChart extends React.Component {
     this.state = {
       elevations: elevationsData,
       laps:   lapsElevations,
-      width:  500,
+      width:  1400,
       height: 200,
     };
   }
@@ -57,8 +72,8 @@ export class ElevationsChart extends React.Component {
       <MySizeGrid 
             ref={ref=>this.chartGrid = ref}
             item
-            xs={4}
-            style={{maxHeight:'500px', minWidth:'420px'}}>
+            xs={12}
+            style={{maxHeight:'200px', minWidth:'500px'}}>
             <AreaChart  data={this.state.elevations} 
                         laps={this.state.laps}
                         textYAxis={this.props.yTitle}
@@ -66,8 +81,8 @@ export class ElevationsChart extends React.Component {
                         padding = {40}
                         width = {this.state.width}
                         height = {this.state.height}
-                        track={this.props.track}
-                        handleMouseOver={this.props.handleMouseOver}
+                        track={this.props.currentTrackpoint}
+                        handleMouseOver={this.props.updateTrackpoint}
                         legend={'m'}
                         ticks={5}/>
       </MySizeGrid>
@@ -76,4 +91,4 @@ export class ElevationsChart extends React.Component {
 
 }
 
-export default ElevationsChart;
+export default connect(mapStateToProps,mapDispatchToProps)(ElevationsChart);

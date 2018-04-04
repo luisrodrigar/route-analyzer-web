@@ -21,6 +21,8 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import CallMergeIcon from 'material-ui-icons/CallMerge';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import Avatar from 'material-ui/Avatar';
+import { connect } from "react-redux";
+import {getLapsTrackPoints} from '../Utils/operations';
 import { lighten } from 'material-ui/styles/colorManipulator';
 
 // Columns data lap model
@@ -206,46 +208,39 @@ function createDataTrackPoint(counter, date, latitude, longitude, altitude, dist
   return { id: counter, date, latitude, longitude, altitude, distance, speed, heartRate };
 }
 
+const mapStateToProps = state => {
+  return { 
+    laps: state.container.laps
+  };
+};
+
 class RouteTable extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.createDataLaps = this.createDataLaps.bind(this);
-    this.createDataTrackpoint = this.createDataTrackpoint.bind(this);
-    this.counterLaps = 0;
-    this.counterTrackpoints = 0;
+  constructor(props) {
+    super(props);
     this.state = {
       order: 'asc',
       orderBy: 'startTime',
       selected: [],
       dataSelected: [],
-      data: this.createDataLaps(props.laps),
       page: 0,
       rowsPerPage: 5,
     };
   }
 
-  createDataLaps(laps){
-    return laps.map(lap =>
-        createDataLaps(++this.counterLaps, lap.startTime, lap.totalTime, lap.distance, lap.maxSpeed, lap.avgSpeed,
-          lap.maxBpm, lap.avgBpm, lap.cal, lap.intensity, lap.color, lap.lightColor, lap.index)
-        )
+  createDataLaps = (laps) => {
+    let counterLaps = 0;
+    return laps.map(lap =>{
+      return createDataLaps(++counterLaps, lap.startTime, lap.totalTime, lap.distance, lap.maxSpeed, lap.avgSpeed,
+        lap.maxBpm, lap.avgBpm, lap.cal, lap.intensity, lap.color, lap.lightColor, lap.index)
+    });
   }
 
-  createDataTrackpoint(lap){
-      return lap.tracks.map(track => 
-        createDataTrackPoint(++this.counterTrackpoints, track.date, track.position.lat, track.position.lng, 
-          track.alt,track.dist, track.speed, track.bpm)
-      )
-  }
-
-  componentWillUpdate(nextProps, nextState){
-    if(nextProps.laps!==this.props.laps){
-      this.counterLaps = 0;
-      this.counterTrackpoints = 0;
-      this.setState({
-        data: this.createDataLaps(nextProps.laps)
-      });
-    }
+  createDataTrackpoint = (lap) => {
+    let counterTrackpoints = 0;
+    return lap.tracks.map(track => {
+      return createDataTrackPoint(++counterTrackpoints, track.date, track.position.lat, track.position.lng, 
+        track.alt,track.dist, track.speed, track.bpm)
+    })
   }
 
   handleRequestSort = (event, property) => {
@@ -278,10 +273,12 @@ class RouteTable extends React.Component {
   handleClick = (event, id) => {
     const { selected, dataSelected } = this.state;
     const selectedIndex = selected.indexOf(id);
-
     let indexLapTable = id - 1;
-    let startTime = this.state.data[indexLapTable].startTime;
-    let indexLap = this.state.data[indexLapTable].index;
+
+    const data = this.createDataLaps(this.props.laps);
+
+    let startTime = data[indexLapTable].startTime;
+    let indexLap = data[indexLapTable].index;
     let objectSelected = {indexLap,startTime};
     const selectDataIndex = dataSelected.map(datum=>datum.indexLap).indexOf(objectSelected.indexLap);
 
@@ -333,9 +330,9 @@ class RouteTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, dataSelected } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, dataSelected } = this.state;
+    const data = this.createDataLaps(this.props.laps);
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
     return (
       <Paper className={classes.root}>
         <RouteTableToolbar  handleRemoveLaps={this.removeLaps} 
@@ -428,7 +425,7 @@ class RouteTable extends React.Component {
 }
 
 RouteTable.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(RouteTable);
+export default connect(mapStateToProps)(withStyles(styles)(RouteTable));

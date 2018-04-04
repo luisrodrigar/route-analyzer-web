@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 import {get} from '../Services/file';
 import {exportAs} from '../Services/activity';
+import { connect } from "react-redux";
 import FileDownload from 'js-file-download';
+
+const mapStateToProps = state => {
+  return { 
+    id: 	state.container.activity.id,
+    type: 	state.container.activity.sourceXmlType
+  };
+};
 
 export class DownloadFileComponent extends Component {
 
@@ -43,4 +51,4 @@ export class DownloadFileComponent extends Component {
 
 
 
-export default DownloadFileComponent;
+export default connect(mapStateToProps)(DownloadFileComponent);

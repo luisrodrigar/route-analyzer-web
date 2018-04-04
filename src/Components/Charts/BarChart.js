@@ -1,8 +1,8 @@
 import React from 'react';
 import AbstractChart from './AbstractChart';
-import DataBar from './DataBar';
-import DataLine from './DataLine';
-import {getColorObject} from '../../Utils/materialColors';
+import DataBar from './Data/DataBar';
+import DataLine from './Data/DataLine';
+import {getColorObject} from '../../Utils/colors';
 
 export class BarChart extends React.Component{
     

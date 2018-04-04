@@ -1,6 +1,6 @@
 import React from 'react';
 import AbstractChart from './AbstractChart';
-import DateArea from './DataArea';
+import DateArea from './Data/DataArea';
 
 export class AreaChart extends React.Component{
 

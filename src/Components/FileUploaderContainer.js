@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import {upload} from '../Services/file';
+import { connect } from "react-redux";
+import { showRoute, toggleProgress } from "../actions/index";
 import './FileUploaderContainer.css';
 
+const mapDispatchToProps = dispatch => {
+  return {
+    actionShowRoute: id => dispatch(showRoute(id)),
+    toggleProgress: isEnable => dispatch(toggleProgress(isEnable))
+  };
+};
 
 class FileUploaderContainer extends Component {
 
@@ -12,7 +20,7 @@ class FileUploaderContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.showProgressIcon();
+    this.props.toggleProgress(true);
     const formData = new FormData();
     formData.append("name", "name de ejemplo");
     formData.append('file', this.fileInput.files[0]);
@@ -20,11 +28,11 @@ class FileUploaderContainer extends Component {
     
     upload(formData)
       .then(idActivity => {
-        this.props.showMapRoute(idActivity);
+        this.props.actionShowRoute(idActivity);
       })
       .catch(err => {
         alert(err.message);
-        this.props.showMapRoute(null);
+        this.props.actionShowRoute(null);
       });
 
   };
@@ -47,4 +55,4 @@ class FileUploaderContainer extends Component {
   }
 }
 
-export default FileUploaderContainer;
+export default connect(null,mapDispatchToProps)(FileUploaderContainer);

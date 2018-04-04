@@ -1,16 +1,24 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {Polyline} from 'react-google-maps';
-import {Route} from 'react-router-dom';
 import RouteMapComponent from './RouteMapComponent';
 import Paper from 'material-ui/Paper';
+import { connect } from "react-redux";
 import './RouteMapContainer.css';
 
-export class RouteMapContainer extends PureComponent {
+const mapStateToProps = state => {
+  return { 
+    laps:               state.container.laps,
+    idLap:              state.container.indexLap,
+    idTrackpoint:       state.container.indexTrackpoint,
+    currentTrackpoint:  state.container.currentTrackpoint
+  };
+};
+ 
+class RouteMapContainer extends Component {
 
 	constructor(props){
     super(props);
     this.state = {
-      laps: [],
       keys: [],
       map:null
     }
@@ -18,18 +26,6 @@ export class RouteMapContainer extends PureComponent {
     this.handleInfoClose = this.handleInfoClose.bind(this);
     this.handleMarkClick = this.handleMarkClick.bind(this);
     this.handleDeletePoint = this.handleDeletePoint.bind(this);
-  }
-
-  componentDidMount(){
-	  	this.setState({ laps: this.props.laps });
-	}
-
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.laps !== this.props.laps){
-      this.setState({
-        laps: this.props.laps
-      });
-    }
   }
 
   getKeysWithoutKey(key){
@@ -92,24 +88,40 @@ export class RouteMapContainer extends PureComponent {
   }
 
   render() {
-    if(this.state.laps.length){
+    if(this.props.laps.length){
       return (
-      	<Route path="/" render={(props) =>
           <RouteMapComponent 
-            laps={this.state.laps} 
+            loadingElement={
+              <div style={
+                  { height: '100%' }
+                } 
+              />
+            }
+            containerElement= {
+              <Paper style={
+                { height: '424px', 
+                  width: '100%' , 
+                  'marginTop': '24px'
+                }
+              } 
+              />
+            }
+            mapElement= {
+              <div style={
+                { height: '100%' }
+              } 
+              />
+            }
             fitBound={this.calculateCenterZoom} 
             handleMarkClick={this.handleMarkClick} 
             handleInfoClose={this.handleInfoClose} 
             handleRemoveMarker={this.handleDeletePoint} 
             handleSplitLap={this.props.handleSplitLap}
-            handleMouseOver={this.props.handleMouseOver}
-            currentTrack={this.props.currentTrack}
+            currentTrack={this.props.idLap + "_" + this.props.idTrackpoint}
+            track={this.props.currentTrack}
             keys={this.state.keys}
-            loadingElement={<div style={{ height: '100%' }} />}
-      		  containerElement= {<Paper style={{ height: '424px', width: '100%' , 'marginTop': '24px'}} />}
-      		  mapElement= {<div style={{ height: '100%' }} />}
+            laps={this.props.laps}
           />
-        }/>
       );
     } else {
       return(<p>No data map</p>);
@@ -118,4 +130,4 @@ export class RouteMapContainer extends PureComponent {
 
 }
 
-export default RouteMapContainer;
+export default connect(mapStateToProps)(RouteMapContainer);
