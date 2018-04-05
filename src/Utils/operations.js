@@ -8,7 +8,7 @@ export function getLapsTrackPoints(laps){
             tracks:getLapTrackPoint(lap),
             color:lap.color,
             lightColor: lap.lightColor,
-            startTime: lap.startTime,
+            startTime: new Date(lap.startTime).getTime(),
             totalTime: lap.totalTimeSeconds,
             distance: lap.distanceMeters,
             maxSpeed: lap.maximunSpeed,
@@ -155,7 +155,7 @@ function getLapTrackPoint(lap){
       var lng = parseFloat(trackPoint.position.longitudeDegrees);
       var alt = parseFloat(trackPoint.altitudeMeters);
       var speed = parseFloat(trackPoint.speed);
-      var date = parseInt(trackPoint.date,10);
+      var date = new Date(trackPoint.date).getTime();
       var dist = parseFloat(trackPoint.distanceMeters);
       var bpm = parseInt(trackPoint.heartRateBpm,10);
       var index = parseInt(trackPoint.index,10);

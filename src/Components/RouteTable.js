@@ -22,7 +22,6 @@ import CallMergeIcon from 'material-ui-icons/CallMerge';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import Avatar from 'material-ui/Avatar';
 import { connect } from "react-redux";
-import {getLapsTrackPoints} from '../Utils/operations';
 import { lighten } from 'material-ui/styles/colorManipulator';
 
 // Columns data lap model

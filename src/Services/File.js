@@ -2,7 +2,7 @@ import Exception from './Exception'
 import axios from 'axios';
 
 export function upload(formData) {
-   const path = "http://localhost:8080/RouteAnalyzer/file/upload";
+   const path = "https://routeanalyzer-api.herokuapp.com/file/upload";
     return axios
       .post(path, formData)
       .then(res => res.data[0])
@@ -12,7 +12,7 @@ export function upload(formData) {
 }
 
 export function get(id, type) {
-   const path = "http://localhost:8080/RouteAnalyzer/file/get/"+type+"/"+id;
+   const path = "https://routeanalyzer-api.herokuapp.com/file/get/"+type+"/"+id;
     return axios
       .get(path)
       .then(res => res.data)

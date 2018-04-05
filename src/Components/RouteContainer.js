@@ -114,10 +114,6 @@ class RouteContainer extends Component {
 
 	render(){
 		if(this.props.activity && this.props.activity.laps){
-			let track = this.props.idLap && this.props.idTrackpoint ? 
-						this.props.activity.laps[this.props.idLap].tracks[this.props.idTrackpoint] 
-						: null;
-			let laps = getLapsTrackPoints(this.props.activity.laps);
 			return (
 				<div>
 					<Grid container spacing={8}>
@@ -130,7 +126,6 @@ class RouteContainer extends Component {
 							<div className="RouteTable">
 								<RouteTable handleRemoveLaps={this.removeLaps} 
 											handleJoinLaps={this.joinLaps} 
-											laps={laps}
 								/>
 							</div>
 						</Grid>
@@ -147,7 +142,6 @@ class RouteContainer extends Component {
 						<Grid item xs={12}>
 						<ElevationsChart	yTitle={'Altitude (m)'}
 											xTitle={'Time (hh:mm:ss)'}
-											currentTrack={track}
 						/>
 						</Grid>
 					</Grid>
@@ -155,7 +149,6 @@ class RouteContainer extends Component {
 						<Grid item xs={12}>
 						<HeartRateChart 	yTitle={'Heart Rate (bpm)'}
 											xTitle={'Time (hh:mm:ss)'}
-											currentTrack={track}
 						/>
 						</Grid>
 					</Grid>
@@ -163,7 +156,6 @@ class RouteContainer extends Component {
 						<Grid item xs={12}>
 						<SpeedChart		 	yTitle={'Speed (m/s)'}
 											xTitle={'Time (hh:mm:ss)'}
-											currentTrack={track}
 						/>
 						</Grid>
 					</Grid>
