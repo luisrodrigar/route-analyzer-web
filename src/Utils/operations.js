@@ -8,7 +8,7 @@ export function getLapsTrackPoints(laps){
             tracks:getLapTrackPoint(lap),
             color:lap.color,
             lightColor: lap.lightColor,
-            startTime: new Date(lap.startTime).getTime(),
+            startTime: lap.startTime ?  parseDate(lap.startTime).getTime() : null,
             totalTime: lap.totalTimeSeconds,
             distance: lap.distanceMeters,
             maxSpeed: lap.maximunSpeed,
@@ -20,6 +20,34 @@ export function getLapsTrackPoints(laps){
       }
   });
   return newLaps;
+}
+
+function getLapTrackPoint(lap){
+  return getLapTracksWithPosition(lap).map(trackPoint => {
+      var lat = parseFloat(trackPoint.position.latitudeDegrees);
+      var lng = parseFloat(trackPoint.position.longitudeDegrees);
+      var position = {lat, lng};
+      var alt = parseFloat(trackPoint.altitudeMeters);
+      var speed = parseFloat(trackPoint.speed);
+      var date = trackPoint.date ? parseDate(trackPoint.date).getTime() : null;
+      var dist = parseFloat(trackPoint.distanceMeters);
+      var bpm = parseInt(trackPoint.heartRateBpm,10);
+      var index = parseInt(trackPoint.index,10);
+      return {
+        index,
+        date,
+        position,
+        alt,
+        speed,
+        dist,
+        bpm
+      };
+  });
+}
+
+function parseDate(dateString){
+  var parts = dateString.split(/[^0-9]/);
+  return new Date (parts[0],parts[1]-1,parts[2],parts[3],parts[4],parts[5],parts[6] );
 }
 
 export function setLapColors(laps){
@@ -147,31 +175,6 @@ function getLapTracksWithPosition(lap){
         return track;
       else return null;
     });
-}
-
-function getLapTrackPoint(lap){
-  return getLapTracksWithPosition(lap).map(trackPoint => {
-      var lat = parseFloat(trackPoint.position.latitudeDegrees);
-      var lng = parseFloat(trackPoint.position.longitudeDegrees);
-      var alt = parseFloat(trackPoint.altitudeMeters);
-      var speed = parseFloat(trackPoint.speed);
-      var date = new Date(trackPoint.date).getTime();
-      var dist = parseFloat(trackPoint.distanceMeters);
-      var bpm = parseInt(trackPoint.heartRateBpm,10);
-      var index = parseInt(trackPoint.index,10);
-      return {
-        index,
-        date,
-        position:{
-          lat,
-          lng
-        },
-        alt,
-        speed,
-        dist,
-        bpm
-      };
-  });
 }
 
 export function getNearestPosition(laps,position){

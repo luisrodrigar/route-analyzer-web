@@ -153,10 +153,6 @@ class MarkerInfoViewComponent extends Component{
     // End
     else if(isEndPoint)
       label = "B";
-    // track points between start and end
-    else if(this.props.currentTrack === keyMarker)
-      icon=iconMarkerSelected;
-      
 
     // Only split lap functionality if its between start and end (not included) of a lap
     let handleSplitLap = this.props.handleSplitLap;

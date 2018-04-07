@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {get, removePoint, removeLaps, setColors, splitLap, joinLaps} from '../Services/activity';
 import DownloadFileComponent from './DownloadFileComponent';
 import RouteMapContainer from './RouteMapContainer';
-import {getLapsTrackPoints, setLapColors} from '../Utils/operations';
+import {setLapColors} from '../Utils/operations';
 import Grid from 'material-ui/Grid';
 import RouteTable from './RouteTable';
 import ElevationsChart from './ElevationsChart';
