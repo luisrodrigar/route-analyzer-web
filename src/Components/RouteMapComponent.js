@@ -6,7 +6,6 @@ import { compose, withProps, lifecycle }  from "recompose";
 import { connect }                        from "react-redux";
 import { updateTrackpoint }               from "../actions/index";
 import { getNearestPosition }       from "../Utils/operations";
-import iconMarkerSelected                 from '../resources/marker_selected.png';
 import './RouteMapComponent.css';
 
 const mapDispatchToProps = dispatch => {
