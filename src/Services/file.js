@@ -1,8 +1,11 @@
 import Exception from './Exception'
 import axios from 'axios';
 
+//const DIR_BASE = "https://routeanalyzer-api.herokuapp.com";
+const DIR_BASE = "http://localhost:8080";
+
 export function upload(formData) {
-   const path = "https://routeanalyzer-api.herokuapp.com/file/upload";
+   const path = DIR_BASE + "/file/upload";
     return axios
       .post(path, formData)
       .then(res => res.data[0])
@@ -12,7 +15,7 @@ export function upload(formData) {
 }
 
 export function get(id, type) {
-   const path = "https://routeanalyzer-api.herokuapp.com/file/get/"+type+"/"+id;
+   const path = DIR_BASE + "/file/get/"+type+"/"+id;
     return axios
       .get(path)
       .then(res => res.data)

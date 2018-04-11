@@ -1,4 +1,5 @@
 import {getColorRandom} from './colors';
+import * as date        from 'datejs';
 
 export function getLapsTrackPoints(laps){
   let newLaps = laps.map(lap => {
@@ -46,8 +47,7 @@ function getLapTrackPoint(lap){
 }
 
 function parseDate(dateString){
-  var parts = dateString.split(/[^0-9]/);
-  return new Date (parts[0],parts[1]-1,parts[2],parts[3],parts[4],parts[5],parts[6] );
+  return Date.parse(dateString);
 }
 
 export function setLapColors(laps){
