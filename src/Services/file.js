@@ -1,8 +1,7 @@
 import Exception from './Exception'
 import axios from 'axios';
 
-//const DIR_BASE = "https://routeanalyzer-api.herokuapp.com";
-const DIR_BASE = "http://localhost:8080";
+const DIR_BASE = "https://routeanalyzer-api.herokuapp.com";
 
 export function upload(formData) {
    const path = DIR_BASE + "/file/upload";
