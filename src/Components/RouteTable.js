@@ -37,18 +37,6 @@ const columnDataLap = [
   { id: 'cal', numeric: true, disablePadding: false, label: 'Cal.' },
 ];
 
-// Columns data trackpoint model
-const columnDataTrackpoint = [
-  { id: 'date', numeric: false, disablePadding: true, label: 'Date' },
-  { id: 'latitude', numeric: true, disablePadding: true, label: 'Latitude (degrees)' },
-  { id: 'longitude', numeric: true, disablePadding: true, label: 'Longitude (degrees)' },
-  { id: 'altitude', numeric: true, disablePadding: true, label: 'Altitude (m)' },
-  { id: 'distance', numeric: true, disablePadding: true, label: 'Distance (g)' },
-  { id: 'speed', numeric: true, disablePadding: true, label: 'Speed (m/s)' },
-  { id: 'heartRate', numeric: true, disablePadding: true, label: 'Heart Rate (bpm)' },
-];
-
-
 class RouteTableHead extends React.Component {
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
