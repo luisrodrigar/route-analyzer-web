@@ -2,7 +2,7 @@
 import {Exception} from './Exception'
 import axios from 'axios';
 
-const DIR_BASE = "http://ec2-52-214-69-233.eu-west-1.compute.amazonaws.com:8080";
+const DIR_BASE = "https://route-analyzer-api.herokuapp.com";
 
 export function get(id){
 	const path = DIR_BASE + "/activity/" + id ;
