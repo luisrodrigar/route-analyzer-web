@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App main component Initial render without crashing 1`] = `
+<BrowserRouter>
+  <div
+    className="App"
+  >
+    <header
+      className="App-header"
+    >
+      <h1
+        className="App-title"
+      >
+        Route Analyzer
+      </h1>
+    </header>
+    <div
+      className="App-intro"
+    >
+      <Connect(FileUploaderContainer) />
+    </div>
+  </div>
+</BrowserRouter>
+`;

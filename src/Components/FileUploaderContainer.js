@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class FileUploaderContainer extends Component {
+export class FileUploaderContainer extends Component {
 
   constructor(props){
     super(props);
@@ -22,7 +22,7 @@ class FileUploaderContainer extends Component {
     event.preventDefault();
     this.props.toggleProgress(true);
     const formData = new FormData();
-    formData.append("name", "name de ejemplo");
+    formData.append("name", "Example name");
     formData.append('file', this.fileInput.files[0]);
     formData.append('type', this.type.value);
     
