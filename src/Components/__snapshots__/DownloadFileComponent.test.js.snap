@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Download File Component Test Initial render without crashing 1`] = `
+<div>
+  <button
+    onClick={[Function]}
+  >
+    Download file 
+  </button>
+  <button
+    onClick={[Function]}
+  >
+    Export as TCX
+  </button>
+  <button
+    onClick={[Function]}
+  >
+    Export as GPX
+  </button>
+</div>
+`;
