@@ -68,5 +68,9 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luisrodrigar/route-analyzer-web.git"
   }
 }
