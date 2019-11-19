@@ -21,8 +21,8 @@ export class FileUploaderContainer extends Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.toggleProgress(true);
+
     const formData = new FormData();
-    formData.append("name", "Example name");
     formData.append('file', this.fileInput.files[0]);
     formData.append('type', this.type.value);
     

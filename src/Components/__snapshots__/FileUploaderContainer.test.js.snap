@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`File Updater Container Test Cases Render initialization successfully 1`] = `
+<div
+  className="FileUploaderContainer"
+>
+  <form
+    className="FileUploaderForm"
+    onSubmit={[Function]}
+  >
+    <input
+      type="file"
+    />
+    <select
+      className="optionFileUploaderForm"
+      defaultValue="gpx"
+    >
+      <option
+        value="gpx"
+      >
+        gpx
+      </option>
+      <option
+        value="tcx"
+      >
+        tcx
+      </option>
+    </select>
+    <input
+      type="submit"
+      value="Submit"
+    />
+  </form>
+</div>
+`;
