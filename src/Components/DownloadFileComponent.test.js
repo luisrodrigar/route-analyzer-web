@@ -9,6 +9,7 @@ import { shallow } from 'enzyme';
 import jsFileDownload from 'js-file-download';
 import * as fileService from '../Services/file';
 import * as activityService from '../Services/activity';
+import flushPromises from "flush-promises";
 
 describe("Download File Component Test", () => {
     const gpxType = "gpx";
@@ -92,6 +93,7 @@ describe("Download File Component Test", () => {
         expect(jsFileDownload).toHaveBeenCalledWith(response, id + "_" + gpxType + ".xml");
     });
     it("Error exporting activity", async () => {
+        window.alert = jest.fn(() => ({}));
         const error = {
             message: "Error exporting an activity."
         };
@@ -100,9 +102,13 @@ describe("Download File Component Test", () => {
         const instance = component.instance();
         await instance.busy;
         const buttonExportTcx = component.find('button').at(1);
-        await buttonExportTcx.simulate('click');
+        buttonExportTcx.simulate('click');
+
+        await flushPromises();
+
         expect(activityService.exportAs).toHaveBeenCalledWith(id, tcxType);
         expect(jsFileDownload).not.toHaveBeenCalledWith();
+        expect(window.alert).toBeCalledWith(error.message);
     });
 });
 
