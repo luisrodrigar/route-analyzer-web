@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Polyline} from 'react-google-maps';
 import RouteMapComponent from './RouteMapComponent';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 import { connect } from "react-redux";
 import './RouteMapContainer.css';
 

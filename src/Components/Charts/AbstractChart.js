@@ -1,6 +1,6 @@
 import React    from 'react';
 import XYAxis   from './Axis/XYAxis';
-import Paper    from 'material-ui/Paper';
+import Paper    from '@material-ui/core/Paper';
 import * as d3            from "d3";
 
 export class AbstractChart extends React.Component{

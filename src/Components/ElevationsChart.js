@@ -1,6 +1,6 @@
 import React    from 'react';
 import sizeMe from 'react-sizeme';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import AreaChart from './Charts/AreaChart';
 import {getElevationData, getLapsElevations} from '../Utils/operations';
 import { connect } from "react-redux";

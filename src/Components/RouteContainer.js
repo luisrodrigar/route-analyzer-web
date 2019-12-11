@@ -3,7 +3,7 @@ import {get, removePoint, removeLaps, setColors, splitLap, joinLaps} from '../Se
 import DownloadFileComponent from './DownloadFileComponent';
 import RouteMapContainer from './RouteMapContainer';
 import {setLapColors} from '../Utils/operations';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import RouteTable from './RouteTable';
 import ElevationsChart from './ElevationsChart';
 import HeartRateChart from './HeartRateChart';
@@ -39,7 +39,7 @@ class RouteContainer extends Component {
 		this.setActivityObject(props.id);
 	}
 
-	componentWillReceiveProps(nextProps){
+	UNSAFE_componentWillReceiveProps(nextProps){
 		if(nextProps.id !== this.props.id){
 			this.setActivityObject(nextProps.id);
 	    }

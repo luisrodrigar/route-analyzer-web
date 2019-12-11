@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import {BrowserRouter as Router } from 'react-router-dom'
 import FileUploaderContainer from './Components/FileUploaderContainer';
 import RouteContainer from './Components/RouteContainer';
-import { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
-import blue from 'material-ui/colors/blue';
+import blue from '@material-ui/core/colors/blue';
 import './App.css';
 
 const styles = theme => ({

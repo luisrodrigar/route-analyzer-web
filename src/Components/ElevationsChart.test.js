@@ -1,25 +1,24 @@
 import React from "react";
-import { ElevationsChart} from "./ElevationsChart";
+import {ElevationsChart} from "./ElevationsChart";
 import sizeMe from 'react-sizeme';
-import { mount, shallow } from "enzyme";
+import {mount, shallow} from "enzyme";
+import * as operations from '../Utils/operations';
+import Grid from '@material-ui/core/Grid';
+import ReactTestUtils from 'react-dom/test-utils';
+
 jest.mock('../Utils/operations');
 jest.mock('../actions/index');
-import * as operations from '../Utils/operations';
-import Grid from 'material-ui/Grid';
-import toJson from "enzyme-to-json";
-import AreaChart from "./Charts/AreaChart";
-
 
 describe("Elevations Chart Test", () => {
     let elevations;
     let elevationsLap;
     let updateTrackPointMock;
-    let currentTrackPoint;
+    let currentTrackpoint;
     let laps;
     let component;
     let props;
     beforeAll(() => {
-        currentTrackPoint = {
+        currentTrackpoint = {
             index: 0,
             position: {
                 lat: 1.2123,
@@ -108,7 +107,7 @@ describe("Elevations Chart Test", () => {
             }
         ];
         props = {
-            currentTrackPoint: currentTrackPoint,
+            currentTrackpoint: currentTrackpoint,
             laps: laps,
         };
     });
@@ -119,14 +118,13 @@ describe("Elevations Chart Test", () => {
     });
     afterEach(() => {
         jest.resetAllMocks();
+    });
+    it("Checking the snapshot",  () => {
+        component = shallow(<ElevationsChart/>);
+        expect(component).toMatchSnapshot();
         component.unmount();
     });
-    it("Checking the snapshot", async () => {
-        component = shallow(<ElevationsChart/>);
-        expect(toJson(component)).toMatchSnapshot();
-
-    });
-    it("Checking the resize event on window.", async () => {
+    it("Checking the resize event on window.",  () => {
         const mockSizeGrid = sizeMe({monitorHeight: true})(Grid);
         const widthMockValue = 15;
         const heightMockValue = 10;
@@ -143,15 +141,20 @@ describe("Elevations Chart Test", () => {
         window.dispatchEvent(new Event('resize'));
         expect(instance.state.width).toEqual(widthMockValue);
         expect(instance.state.height).toEqual(heightMockValue);
+        component.unmount();
     });
-    it("Checking the resize event on window.", async () => {
-        component = shallow(<ElevationsChart props={props}
-                                             yTitle={'Altitude (m)'}
-                                             xTitle={'Time (hh:mm:ss)'}
-                                             updateTrackpoint={updateTrackPointMock}/>);
-        const areaChart = component.childAt(0).find(AreaChart).first();
+    it("Checking mouse over event.",   () => {
+        let instance = ReactTestUtils.renderIntoDocument(
+            <ElevationsChart props={props}
+                             yTitle={'Altitude (m)'}
+                             xTitle={'Time (hh:mm:ss)'}
+                             updateTrackpoint={updateTrackPointMock}/>
+        );
 
-        areaChart.simulate('mouseOver');
+        let areaChart = ReactTestUtils.findAllInRenderedTree(instance, (e) =>
+            ReactTestUtils.findAllInRenderedTree(e, ed => console.log(ed)));
+
+        ReactTestUtils.Simulate.mouseOver(ReactDOM.findDOMNode(areaChart));
 
         expect(updateTrackPointMock).toBeCalled();
     });

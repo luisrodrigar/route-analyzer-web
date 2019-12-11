@@ -17,8 +17,8 @@
     "jsdom": "^15.2.1",
     "macaddress": "^0.2.9",
     "markerclustererplus": "^2.1.4",
-    "material-ui": "^1.0.0-beta.37",
-    "material-ui-icons": "^1.0.0-beta.36",
+    "@material-ui/core": "3.0.2",
+    "@material-ui/icons": "3.0.2",
     "minimatch": "^3.0.2",
     "np": "^2.20.1",
     "polyfills": "^2.1.1",
@@ -30,15 +30,15 @@
     "react-router-dom": "^4.2.2",
     "react-script": "^2.0.5",
     "react-scripts": "1.1.1",
-    "react-sizeme": "^2.3.6",
+    "react-sizeme": "2.6.0",
     "sshpk": "^1.13.2",
     "url-parse": "^1.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripçts eject"
+    "test": "react-scripts test --env=jsdom --config=jest-config.js",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",

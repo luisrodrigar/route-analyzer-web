@@ -1,6 +1,6 @@
 import React    from 'react';
 import sizeMe from 'react-sizeme';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import LineChart from './Charts/LineChart'
 import {getLapsSpeed, getSpeedData, getAvgSpeed} from '../Utils/operations';
 import { connect } from "react-redux";

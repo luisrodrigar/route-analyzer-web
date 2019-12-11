@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
 import { App } from './App';
-import { CircularProgress } from 'material-ui/Progress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FileUploaderContainer from './Components/FileUploaderContainer';
 import RouteContainer from './Components/RouteContainer';
 
@@ -17,7 +16,7 @@ describe('App main component', () => {
       expect(wrapper.find(CircularProgress).length).toBe(0);
       expect(wrapper.find(FileUploaderContainer).length).toBe(1);
       expect(wrapper.find(RouteContainer).length).toBe(0);
-      expect(toJson(wrapper)).toMatchSnapshot();
+      expect(wrapper).toMatchSnapshot();
   });
   it('Loading some activity render', () => {
         const props = {

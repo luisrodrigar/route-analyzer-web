@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from "react-redux";
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Table, {
+import { withStyles } from '@material-ui/core/styles';
+import {
+  Table,
   TableBody,
   TableCell,
   TableFooter,
@@ -10,19 +12,18 @@ import Table, {
   TablePagination,
   TableRow,
   TableSortLabel,
-} from 'material-ui/Table';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import CallMergeIcon from 'material-ui-icons/CallMerge';
-import FilterListIcon from 'material-ui-icons/FilterList';
-import Avatar from 'material-ui/Avatar';
-import { connect } from "react-redux";
-import { lighten } from 'material-ui/styles/colorManipulator';
+} from '@material-ui/core';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CallMergeIcon from '@material-ui/icons/CallMerge';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Avatar from '@material-ui/core/Avatar';
+import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 // Columns data lap model
 const columnDataLap = [
