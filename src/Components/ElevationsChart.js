@@ -37,7 +37,7 @@ export class ElevationsChart extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState, prevContext){
     if(prevProps.laps !== this.props.laps){
       let chart = this.chartGrid;
       let elevationsData = getElevationData(this.props.laps);

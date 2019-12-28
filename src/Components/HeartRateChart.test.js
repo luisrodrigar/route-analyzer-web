@@ -1,5 +1,5 @@
 import React from "react";
-import {ElevationsChart} from "./ElevationsChart";
+import {HeartRateChart} from "./HeartRateChart";
 import sizeMe from 'react-sizeme';
 import {mount, shallow} from "enzyme";
 import * as operations from '../Utils/operations';
@@ -9,9 +9,10 @@ import toJson from "enzyme-to-json";
 jest.mock('../Utils/operations');
 jest.mock('../actions/index');
 
-describe("Elevations Chart Test", () => {
-    let elevations;
-    let elevationsLap;
+describe("Heart Rate Chart Test", () => {
+    let heartRates;
+    let heartRatesLap;
+    let heartRatesAvg;
     let updateTrackPointMock;
     let currentTrackpoint;
     let laps;
@@ -24,7 +25,8 @@ describe("Elevations Chart Test", () => {
                 lat: 1.2123,
                 lng: 0.2324
             },
-            alt: 12.343
+            alt: 12.343,
+            bpm: 98
         };
         laps = [
             {
@@ -36,7 +38,8 @@ describe("Elevations Chart Test", () => {
                             lat: 1.2123,
                             lng: 0.2324
                         },
-                        alt: 12.343
+                        alt: 12.343,
+                        bpm: 90
                     },
                     {
                         index: 1,
@@ -44,7 +47,8 @@ describe("Elevations Chart Test", () => {
                             lat: 1.2122,
                             lng: 0.2325
                         },
-                        alt: 12.543
+                        alt: 12.543,
+                        bpm: 98
                     }
                 ]
             },
@@ -57,7 +61,8 @@ describe("Elevations Chart Test", () => {
                             lat: 1.2124,
                             lng: 0.2327
                         },
-                        alt: 13.343
+                        alt: 13.343,
+                        bpm: 110
                     },
                     {
                         index: 1,
@@ -65,26 +70,27 @@ describe("Elevations Chart Test", () => {
                             lat: 1.2128,
                             lng: 0.2326
                         },
-                        alt: 15.543
+                        alt: 15.543,
+                        bpm: 120
                     }
                 ]
             }
         ];
-        elevations = [
-            ["2019-07-07T10:34:00Z", 123],
-            ["2019-07-07T10:34:10Z", 130],
-            ["2019-07-07T10:34:20Z", 132],
-            ["2019-07-07T10:34:30Z", 114],
-            ["2019-07-07T10:34:40Z", 124]
+        heartRates = [
+            ["2019-07-07T10:34:00Z", 90],
+            ["2019-07-07T10:34:10Z", 98],
+            ["2019-07-07T10:34:20Z", 110],
+            ["2019-07-07T10:34:30Z", 120],
+            ["2019-07-07T10:34:40Z", 135]
         ];
-        elevationsLap = [
+        heartRatesLap = [
             {
                 index: 0,
                 color: '#032',
                 label: "Lap0",
                 tracks: [
-                    ["2019-07-07T10:34:00Z", 123],
-                    ["2019-07-07T10:34:10Z", 130],
+                    ["2019-07-07T10:34:00Z", 90],
+                    ["2019-07-07T10:34:10Z", 98],
                 ]
             },
             {
@@ -92,9 +98,8 @@ describe("Elevations Chart Test", () => {
                 color: '#012',
                 label: "Lap1",
                 tracks: [
-                    ["2019-07-07T10:34:20Z", 132],
-                    ["2019-07-07T10:34:30Z", 114],
-                    ["2019-07-07T10:34:40Z", 124]
+                    ["2019-07-07T10:34:20Z", 110],
+                    ["2019-07-07T10:34:30Z", 120]
                 ]
             },
             {
@@ -102,9 +107,14 @@ describe("Elevations Chart Test", () => {
                 color: '#002',
                 label: "Lap2",
                 tracks: [
-                    ["2019-07-07T10:34:40Z", 124]
+                    ["2019-07-07T10:34:40Z", 135]
                 ]
             }
+        ];
+        heartRatesAvg = [
+            ["2019-07-07T10:34:05Z", 94],
+            ["2019-07-07T10:34:25Z", 115],
+            ["2019-07-07T10:34:40Z", 135]
         ];
         props = {
             currentTrackpoint: currentTrackpoint,
@@ -112,19 +122,20 @@ describe("Elevations Chart Test", () => {
         };
     });
     beforeEach( () => {
-        operations.getElevationData.mockImplementationOnce(() => elevations);
-        operations.getLapsElevations.mockImplementationOnce(() => elevationsLap);
+        operations.getLapsHeartRate.mockImplementationOnce(() => heartRatesLap);
+        operations.getHeartRateData.mockImplementationOnce(() => heartRates);
+        operations.getAvgBpm.mockImplementationOnce(() => heartRatesAvg);
         updateTrackPointMock = jest.fn();
     });
     afterEach( () => {
         jest.resetAllMocks();
         component.unmount();
     });
-    it("Checking the elevation chart snapshot", () => {
-        component = shallow(<ElevationsChart/>);
+    it("Checking the heart rate snapshot",() => {
+        component = shallow(<HeartRateChart />);
         expect(toJson(component)).toMatchSnapshot();
     });
-    it("Checking the resize event on window elevation chart.", () => {
+    it("Checking the resize event on window heart rate.",() => {
         const mockSizeGrid = sizeMe({monitorHeight: true})(Grid);
         const widthMockValue = 15;
         const heightMockValue = 10;
@@ -132,8 +143,8 @@ describe("Elevations Chart Test", () => {
             width: widthMockValue,
             height: heightMockValue
         };
-        component = mount(<ElevationsChart props={props}
-                                           yTitle={'Altitude (m)'}
+        component = mount(<HeartRateChart props={props}
+                                           yTitle={'Heart Rate (bpm)'}
                                            xTitle={'Time (hh:mm:ss)'}
                                            updateTrackpoint={updateTrackPointMock}/>);
         const instance = component.instance();

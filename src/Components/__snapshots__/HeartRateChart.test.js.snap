@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
+exports[`Heart Rate Chart Test Checking the heart rate snapshot 1`] = `
 <SizeMe(WithStyles(Grid))
   item={true}
   style={
@@ -11,28 +11,44 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
   }
   xs={12}
 >
-  <AreaChart
+  <BarChart
     data={
       Array [
         Array [
           "2019-07-07T10:34:00Z",
-          123,
+          90,
         ],
         Array [
           "2019-07-07T10:34:10Z",
-          130,
+          98,
         ],
         Array [
           "2019-07-07T10:34:20Z",
-          132,
+          110,
         ],
         Array [
           "2019-07-07T10:34:30Z",
-          114,
+          120,
         ],
         Array [
           "2019-07-07T10:34:40Z",
-          124,
+          135,
+        ],
+      ]
+    }
+    dataLine={
+      Array [
+        Array [
+          "2019-07-07T10:34:05Z",
+          94,
+        ],
+        Array [
+          "2019-07-07T10:34:25Z",
+          115,
+        ],
+        Array [
+          "2019-07-07T10:34:40Z",
+          135,
         ],
       ]
     }
@@ -46,11 +62,11 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
           "tracks": Array [
             Array [
               "2019-07-07T10:34:00Z",
-              123,
+              90,
             ],
             Array [
               "2019-07-07T10:34:10Z",
-              130,
+              98,
             ],
           ],
         },
@@ -61,15 +77,11 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
           "tracks": Array [
             Array [
               "2019-07-07T10:34:20Z",
-              132,
+              110,
             ],
             Array [
               "2019-07-07T10:34:30Z",
-              114,
-            ],
-            Array [
-              "2019-07-07T10:34:40Z",
-              124,
+              120,
             ],
           ],
         },
@@ -80,13 +92,13 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
           "tracks": Array [
             Array [
               "2019-07-07T10:34:40Z",
-              124,
+              135,
             ],
           ],
         },
       ]
     }
-    legend="m"
+    legend="bpm"
     padding={40}
     ticks={5}
     width={1400}

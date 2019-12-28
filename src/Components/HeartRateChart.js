@@ -39,7 +39,7 @@ export class HeartRateChart extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState, prevContext){
     if(prevProps.laps !== this.props.laps){
       let chart = this.chartGrid;
       let heartRates = getHeartRateData(this.props.laps);
