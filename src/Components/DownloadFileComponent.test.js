@@ -14,9 +14,9 @@ import flushPromises from "flush-promises";
 describe("Download File Component Test", () => {
     const gpxType = "gpx";
     const tcxType = "tcx";
-    let id;
     let gpxProps;
     let tcxProps;
+    let id;
     beforeAll(() => {
         id = "5ace8cd14c147400048aa6b0";
         gpxProps = {
@@ -51,6 +51,7 @@ describe("Download File Component Test", () => {
         expect(jsFileDownload).toBeCalledWith(response, id + "_" + gpxType + ".xml");
     });
     it("Error downloading gpx file", async () => {
+        window.alert = jest.fn(() => ({})); // provide a mock implementation for window.alert
         const error = {
             message: "Mocked error response."
         };
@@ -60,9 +61,13 @@ describe("Download File Component Test", () => {
         await instance.busy;
         const buttonDownload = component.find('button').at(0);
         expect(buttonDownload.text()).toBe("Download file ");
-        await buttonDownload.simulate('click');
+        buttonDownload.simulate('click');
+
+        await flushPromises();
+
         expect(fileService.get).toHaveBeenCalledWith(id, gpxType);
         expect(jsFileDownload).not.toHaveBeenCalled();
+        expect(window.alert).toBeCalledWith(error.message);
     });
     it("Export activity to tcx file", async () => {
         const response = {
@@ -93,7 +98,7 @@ describe("Download File Component Test", () => {
         expect(jsFileDownload).toHaveBeenCalledWith(response, id + "_" + gpxType + ".xml");
     });
     it("Error exporting activity", async () => {
-        window.alert = jest.fn(() => ({}));
+        window.alert = jest.fn(() => ({})); // provide a mock implementation for window.alert
         const error = {
             message: "Error exporting an activity."
         };
