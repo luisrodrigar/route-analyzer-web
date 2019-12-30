@@ -2,8 +2,7 @@ import {getColorRandom} from './colors';
 import * as date        from 'datejs';
 
 export function getLapsTrackPoints(laps){
-  let newLaps = laps.map(lap => {
-
+  return laps.map(lap => {
       return {
             index:lap.index,
             tracks:getLapTrackPoint(lap),
@@ -12,28 +11,27 @@ export function getLapsTrackPoints(laps){
             startTime: lap.startTime ?  parseDate(lap.startTime).getTime() : null,
             totalTime: lap.totalTimeSeconds,
             distance: lap.distanceMeters,
-            maxSpeed: lap.maximunSpeed,
+            maxSpeed: lap.maximumSpeed,
             avgSpeed: lap.averageSpeed,
             avgBpm: lap.averageHearRate,
-            maxBpm: lap.maximunHeartRate,
+            maxBpm: lap.maximumHeartRate,
             cal: lap.calories,
             intensity: lap.intensity
       }
   });
-  return newLaps;
 }
 
 function getLapTrackPoint(lap){
   return getLapTracksWithPosition(lap).map(trackPoint => {
-      var lat = parseFloat(trackPoint.position.latitudeDegrees);
-      var lng = parseFloat(trackPoint.position.longitudeDegrees);
-      var position = {lat, lng};
-      var alt = parseFloat(trackPoint.altitudeMeters);
-      var speed = parseFloat(trackPoint.speed);
-      var date = trackPoint.date ? parseDate(trackPoint.date).getTime() : null;
-      var dist = parseFloat(trackPoint.distanceMeters);
-      var bpm = parseInt(trackPoint.heartRateBpm,10);
-      var index = parseInt(trackPoint.index,10);
+      const lat = parseFloat(trackPoint.position.latitudeDegrees);
+      const lng = parseFloat(trackPoint.position.longitudeDegrees);
+      const position = {lat, lng};
+      const alt = parseFloat(trackPoint.altitudeMeters);
+      const speed = parseFloat(trackPoint.speed);
+      const date = trackPoint.date ? parseDate(trackPoint.date).getTime() : null;
+      const dist = parseFloat(trackPoint.distanceMeters);
+      const bpm = parseInt(trackPoint.heartRateBpm,10);
+      const index = parseInt(trackPoint.index,10);
       return {
         index,
         date,
@@ -51,21 +49,18 @@ function parseDate(dateString){
 }
 
 export function setLapColors(laps){
-  let currentColors = laps.map(lap=>{
-    if(lap.color&&lap.lightColor) 
-      return [lap.color,lap.lightColor]
-    else
-      return null;
-  }).filter(item=>item);
-  let numLapsWithoutColor = laps.filter(lap=>!lap.color&&!lap.lightColor).length;
+  let currentColors = laps
+      .filter(lap => lap.color && lap.lightColor)
+      .map(lap => [lap.color,lap.lightColor]);
+  let numLapsWithoutColor = laps
+      .filter(lap=> !lap.color && !lap.lightColor)
+      .length;
   const colors = getColorRandom(numLapsWithoutColor, currentColors);
-  let index = 0;
-  laps.forEach(lap=>{
-    if(!lap.color && !lap.lightColor){
-      lap.color = colors[index][0];
-      lap.lightColor = colors[index++][1];
-    }
-  });
+  laps.filter(lap => !lap.color && !lap.lightColor)
+      .forEach((lap, index) => {
+        lap.color = colors[index][0];
+        lap.lightColor = colors[index][1];
+      });
 }
 
 export function getLapsSpeed(laps){
@@ -86,7 +81,7 @@ export function getLapsHeartRate(laps){
       index: lap.index,
       color: lap.lightColor,
       label: "Lap " + lap.index,
-      tracks:lap.tracks.map(track=>[track.date, track.bpm])
+      tracks: lap.tracks.map(track => [track.date, track.bpm])
     }
   });
 }
@@ -97,75 +92,60 @@ export function getLapsElevations(laps){
       index: lap.index,
       color: lap.color,
       label: "Lap " + lap.index,
-      tracks:lap.tracks.map(track=>[track.date, track.alt])
+      tracks: lap.tracks.map(track => [track.date, track.alt])
     }
   });
 }
 
-export function getAvgBpm(laps){
-  let avgBpm = [];
-  laps.forEach( lap =>
-    avgBpm.push([((lap.tracks[0].date+lap.tracks[lap.tracks.length-1].date)/2),lap.avgBpm])
-  );
+export function calculateAvgValues(laps, avgMethod) {
+    return laps
+        .map(lap => [getAvgDate(lap.tracks), avgMethod(lap)]);
+}
 
-  if(laps.length===1){
-    let avgDate = avgBpm[0][0];
+function getAvgDate(tracks) {
+    return (tracks[0].date + tracks[tracks.length-1].date) / 2;
+}
+
+function calculateAvgSingleLap(laps, avgArray, avgMethod) {
+    let avgDate = avgArray[0][0];
     let initDate = laps[0].tracks[0].date;
     let endDate = laps[0].tracks[(laps[0].tracks.length)-1].date;
-    avgBpm = [];
-    avgBpm.push([initDate, laps[0].avgBpm]);
-    avgBpm.push([avgDate, laps[0].avgBpm]);
-    avgBpm.push([endDate, laps[0].avgBpm]);
-  }
-  return avgBpm;
+    avgArray = [];
+    avgArray.push([initDate, avgMethod(laps[0])]);
+    avgArray.push([avgDate, avgMethod(laps[0])]);
+    avgArray.push([endDate, avgMethod(laps[0])]);
+    return avgArray;
+}
+
+export function getAvgBpm(laps){
+    let avgBpmMethod = function(lap) {
+        return lap.avgBpm;
+    };
+    let avgBpm = calculateAvgValues(laps, avgBpmMethod);
+    return laps.length > 1 ? avgBpm : calculateAvgSingleLap(laps, avgBpm, avgBpmMethod);
 }
 
 export function getAvgSpeed(laps){
-  let avgSpeed = [];
-  laps.forEach( lap =>
-    avgSpeed.push([((lap.tracks[0].date+lap.tracks[lap.tracks.length-1].date)/2),lap.avgSpeed])
-  );
-
-  if(laps.length===1){
-    let avgDate = avgSpeed[0][0];
-    let initDate = laps[0].tracks[0].date;
-    let endDate = laps[0].tracks[(laps[0].tracks.length)-1].date;
-    avgSpeed = [];
-    avgSpeed.push([initDate, laps[0].avgSpeed]);
-    avgSpeed.push([avgDate, laps[0].avgSpeed]);
-    avgSpeed.push([endDate, laps[0].avgSpeed]);
-  }
-  return avgSpeed;
+    let avgSpeedMethod = function(lap) {
+        return lap.avgSpeed;
+    };
+    let avgSpeed = calculateAvgValues(laps, avgSpeedMethod);
+    return laps.length > 1 ? avgSpeed : calculateAvgSingleLap(laps, avgSpeed, avgSpeedMethod);
 }
 
-export function getHeartRateData(laps){
-  let bpms = [];
-  laps.forEach( lap =>
-    lap.tracks.forEach(track => 
-      bpms.push([track.date,track.bpm])
-      )
-    )
-  return bpms;
+export function getHeartRateData(laps) {
+  return laps.flatMap(lap =>
+      lap.tracks.map(track => [track.date,track.bpm]));
 }
 
-export function getElevationData(laps){
-  let elevations = [];
-  laps.forEach( lap =>
-    lap.tracks.forEach(track => 
-      elevations.push([track.date,track.alt])
-      )
-    )
-  return elevations;
+export function getElevationData(laps) {
+  return laps.flatMap(lap =>
+    lap.tracks.map(track => [track.date,track.alt]));
 }
 
 export function getSpeedData(laps){
-  let speed = [];
-  laps.forEach( lap =>
-    lap.tracks.forEach(track => 
-      speed.push([track.date,track.speed])
-      )
-    )
-  return speed;
+  return laps.flatMap(lap =>
+      lap.tracks.map(track => [track.date,track.speed]));
 }
 
 function getLapTracksWithPosition(lap){

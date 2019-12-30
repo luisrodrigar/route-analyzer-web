@@ -40,9 +40,9 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
     laps={
       Array [
         Object {
-          "color": "#ffcc80",
+          "color": "#ff320b",
           "index": 1,
-          "label": "Lap0",
+          "label": "Lap 1",
           "tracks": Array [
             Array [
               1545403087000,
@@ -57,7 +57,7 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
         Object {
           "color": "#ffbb97",
           "index": 2,
-          "label": "Lap1",
+          "label": "Lap 2",
           "tracks": Array [
             Array [
               1545403107000,
@@ -70,9 +70,9 @@ exports[`Elevations Chart Test Checking the elevation chart snapshot 1`] = `
           ],
         },
         Object {
-          "color": "#aaff14",
+          "color": "#0214ff",
           "index": 3,
-          "label": "Lap2",
+          "label": "Lap 3",
           "tracks": Array [
             Array [
               1545403127000,
