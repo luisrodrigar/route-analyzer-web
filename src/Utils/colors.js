@@ -23,8 +23,8 @@ const mainColors = [
   'Grey',
   'Blue Grey'
 ];
-const lightPalette = [200];
-const darkPalette = [500,900];
+export const lightPalette = [50, 100, 200];
+export const darkPalette = [500,700, 900];
 
 export function getColorObject(name){
   switch(name){
@@ -72,9 +72,9 @@ export function getColorObject(name){
 }
 
 function getColor(){
-  const colorDark = darkPalette[Math.floor(Math.random()*darkPalette.length)];
-  const colorLight = lightPalette[Math.floor(Math.random()*lightPalette.length)];
-  const colorName = mainColors[Math.floor(Math.random()*mainColors.length)];
+  const colorDark = darkPalette[Math.floor(Math.random() * darkPalette.length)];
+  const colorLight = lightPalette[Math.floor(Math.random() * lightPalette.length)];
+  const colorName = mainColors[Math.floor(Math.random() * mainColors.length)];
 
   const colorObject = getColorObject(colorName);
 
@@ -87,11 +87,11 @@ function getColor(){
 export function getColorRandom(numColors, currentColors){
   let arrayColors = [];
   let color = null;
-  for(let i=0; i<numColors; i++){
-    if(numColors<(mainColors.length * darkPalette.length)){
-      do{
+  for(let i=0; i < numColors; i++){
+    if(numColors < (mainColors.length * darkPalette.length)){
+      do {
         color = getColor();
-      }while(currentColors.map(x=>x.join('')).indexOf(color.join(''))>=0);
+      } while(currentColors.map(x=>x.join('')).indexOf(color.join(''))>=0);
       currentColors.push(color);
     }else{
       color = getColor();
