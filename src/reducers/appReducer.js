@@ -1,3 +1,4 @@
+
 import { TOGGLE_PROGRESS, SHOW_ROUTE } from '../constants/action-types';
 
 const initialState = {

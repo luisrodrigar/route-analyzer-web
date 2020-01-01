@@ -4,13 +4,18 @@ import axios from 'axios';
 
 const DIR_BASE = "https://route-analyzer-api.herokuapp.com";
 
+export const EXCEPTION_MESSAGE_NOT_FOUND = "Not match any activity with the id passed as a parameter.";
+export const EXCEPTION_MESSAGE_ERROR_EXPORT = "Problem trying to export the file as ";
+export const EXCEPTION_MESSAGE_ERROR_SET_COLORS = "It cannot be posible to set the colors";
+
 export function get(id){
 	const path = DIR_BASE + "/activity/" + id ;
 	return axios
 		.get(path)
     	.then(res => res.data)
     	.catch(err => {
-    		throw new Exception("Not match any activity with the id passed as a parameter.");
+    		console.log(err)
+    		throw new Exception(EXCEPTION_MESSAGE_NOT_FOUND);
     	});
 }
 
@@ -20,7 +25,8 @@ export function exportAs(id, type){
 		.get(path)
     	.then(res => res.data)
     	.catch(err => {
-    		throw new Exception("Problem trying to export the file as " + type);
+    		console.log(err);
+    		throw new Exception(EXCEPTION_MESSAGE_ERROR_EXPORT + type);
     	});
 }
 
@@ -35,6 +41,7 @@ export function joinLaps(id, dataSelected){
 		.put(url)
     	.then(res => res.data)
     	.catch(err => {
+    		console.log(err);
     		throw new Exception(err.response.data.description);
     	});
 }
@@ -51,6 +58,7 @@ export function removePoint(id, position, timeInMillis, index){
 		.put(url)
     	.then(res => res.data)
     	.catch(err => {
+    		console.log(err);
     		throw new Exception(err.response.data.description);
     	});
 }
@@ -66,6 +74,7 @@ export function splitLap(id, position, timeInMillis, index){
 		.put(url)
     	.then(res => res.data)
     	.catch(err => {
+    		console.log(err);
     		throw new Exception(err.response.data.description);
     	});
 }
@@ -86,6 +95,7 @@ export function removeLaps(id,dataSelected){
 		.put(url)
     	.then(res => res.data)
     	.catch(err => {
+    		console.log(err);
     		throw new Exception(err.response.data.description);
     	});
 }
@@ -96,7 +106,8 @@ export function setColors(id, data){
 		.put(url)
 		.then()
     	.catch(err => {
-    		throw new Exception("It cannot be posible to set the colors");
+    		console.log(err);
+    		throw new Exception(EXCEPTION_MESSAGE_ERROR_SET_COLORS);
     	});
 }
 

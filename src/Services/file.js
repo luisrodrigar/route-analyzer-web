@@ -9,6 +9,7 @@ export function upload(formData) {
       .post(path, formData)
       .then(res => res.data[0])
       .catch(err => {
+          console.log(err);
         throw new Exception(err.response.data.description);
       });
 }
@@ -19,6 +20,7 @@ export function get(id, type) {
       .get(path)
       .then(res => res.data)
       .catch(err => {
-        throw new Exception(err.response.data.description);
+          console.log(err);
+          throw new Exception(err.response.data.description);
       });
 }
