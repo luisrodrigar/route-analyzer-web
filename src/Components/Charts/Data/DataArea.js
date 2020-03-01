@@ -43,11 +43,7 @@ export class DataArea extends React.Component {
                             width={this.props.width}
                             height={this.props.height}
                             padding={this.props.padding}
-                            handleMouseOver={(event) => {
-                                console.log("EVENT DONE");
-                                console.log(event);
-                                this.props.handleMouseOver(event);
-                            }}
+                            handleMouseOver={this.props.handleMouseOver}
                             laps={this.props.laps} 
                             data={this.props.data}
                             legend={this.props.legend}
