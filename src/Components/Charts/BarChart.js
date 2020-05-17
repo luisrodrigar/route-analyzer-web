@@ -4,7 +4,7 @@ import DataBar from './Data/DataBar';
 import DataLine from './Data/DataLine';
 import {getColorObject} from '../../Utils/colors';
 
-export class BarChart extends React.Component{
+export default class BarChart extends React.Component{
     
 	render(){
         let existInformedData = this.props.data && this.props.data.filter(data=>data[1]).length>0;
@@ -22,5 +22,3 @@ export class BarChart extends React.Component{
 		);
 	}
 }
-
-export default BarChart;

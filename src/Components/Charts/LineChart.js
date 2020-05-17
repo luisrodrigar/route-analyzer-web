@@ -4,7 +4,7 @@ import DataLine from './Data/DataLine';
 import DataMultiLine from './Data/DataMultiLine';
 import {getColorObject} from '../../Utils/colors';
 
-export class LineChart extends React.Component{
+export default class LineChart extends React.Component{
     
 	render(){
 		let color = getColorObject('Red')[200];
@@ -21,5 +21,3 @@ export class LineChart extends React.Component{
 		);
 	}
 }
-
-export default LineChart;

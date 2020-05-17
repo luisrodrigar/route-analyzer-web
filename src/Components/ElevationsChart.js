@@ -67,13 +67,11 @@ export class ElevationsChart extends React.Component {
     window.removeEventListener("resize", this.handleChangeSizeContent);
   }
 
-	render(){
-		return(
-      <MySizeGrid 
-            ref={ref=>this.chartGrid = ref}
-            item
-            xs={12}
-            style={{maxHeight:'200px', minWidth:'500px'}}>
+  render(){
+    return(
+        <MySizeGrid
+            ref={ref=>this.chartGrid = ref} item
+            xs={12} style={{maxHeight:'200px', minWidth:'500px'}}>
             <AreaChart  data={this.state.elevations} 
                         laps={this.state.laps}
                         textYAxis={this.props.yTitle}
@@ -85,8 +83,8 @@ export class ElevationsChart extends React.Component {
                         handleMouseOver={this.props.updateTrackpoint}
                         legend={'m'}
                         ticks={5}/>
-      </MySizeGrid>
-		);
+        </MySizeGrid>
+    );
   }
 
 }

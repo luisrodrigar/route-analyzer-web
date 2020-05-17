@@ -2,7 +2,7 @@ import React    from 'react';
 import InformationTooltip from '../Tooltip/InformationTooltip';
 import * as d3  from "d3";
 
-export class DataMultiLine extends React.Component {
+export default class DataMultiLine extends React.Component {
 
   constructor(props){
     super(props);
@@ -25,42 +25,30 @@ export class DataMultiLine extends React.Component {
   };
 
   render(){
-    let date = null, data=null;
-    if(this.props.track){
-      date = this.props.track.date;
-      data = this.props.track.speed;
-    }
-    return(
-      <g className={'line'}>
-      { 
-        this.props.laps.map(lap=>this.renderLine(lap))
+      let date = null, data=null;
+      if(this.props.track){
+          date = this.props.track.date;
+          data = this.props.track.speed;
       }
-        <InformationTooltip ref="tooltip" 
-                            xScale={this.props.xScale}
-                            yScale={this.props.yScale}
-                            width={this.props.width}
-                            height={this.props.height}
-                            padding={this.props.padding}
-                            handleMouseOver={this.props.handleMouseOver}
-                            laps={this.props.laps} 
-                            data={this.props.data}
-                            legend={this.props.legend}
-                            trackpoint={{
-                              date,
-                              data
-                            }}
-        />
-        <rect className="overlay" 
-              width={this.props.width-(2*this.props.padding)} 
-              height={this.props.height-(2*this.props.padding)}
-              style={{fill: 'none', pointerEvents: 'all'}}
-              onMouseOver={(event)=>this.refs.tooltip.mouseMove(event)}
-              onMouseMove={(event)=>this.refs.tooltip.mouseMove(event)}
-        />
-      </g>
-    );
+      return(
+          <g className={'line'}>
+              {this.props.laps.map(lap=>this.renderLine(lap))}
+              <InformationTooltip ref="tooltip" xScale={this.props.xScale}
+                                  yScale={this.props.yScale} width={this.props.width}
+                                  height={this.props.height} padding={this.props.padding}
+                                  handleMouseOver={this.props.handleMouseOver}
+                                  laps={this.props.laps} data={this.props.data}
+                                  legend={this.props.legend} trackpoint={{ date, data}}
+              />
+              <rect className="overlay" width={this.props.width-(2*this.props.padding)}
+                    height={this.props.height-(2*this.props.padding)}
+                    style={{fill: 'none', pointerEvents: 'all'}}
+                    onMouseOver={(event) =>
+                        this.refs.tooltip.mouseMove(event)}
+                    onMouseMove={(event) =>
+                        this.refs.tooltip.mouseMove(event)}
+              />
+          </g>
+      );
   }
-
 }
-
-export default DataMultiLine;

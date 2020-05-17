@@ -1,18 +1,16 @@
 import React from 'react';
 import AbstractChart from './AbstractChart';
-import DateArea from './Data/DataArea';
+import DataArea from './Data/DataArea';
 
-export class AreaChart extends React.Component{
+export default class AreaChart extends React.Component{
 
 	render(){
 		return( 
 			<AbstractChart {...this.props}  >
 				{ this.props.data && this.props.data.length && 
-	              	<DateArea   {...this.props}/>
+	              	<DataArea   {...this.props}/>
 				}
 			</AbstractChart>
 		);
 	}
 }
-
-export default AreaChart;

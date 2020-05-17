@@ -71,27 +71,25 @@ export class HeartRateChart extends React.Component {
     window.removeEventListener("resize", this.handleChangeSizeContent);
   }
 
-	render(){
+  render(){
 		return(
-      <MySizeGrid 
-            ref={ref=>this.chartGrid = ref}
-            item
-            xs={12}
-            style={{maxHeight:'200px', minWidth:'500px'}}>
-            <BarChart   textYAxis={this.props.yTitle}
-                        textXAxis={this.props.xTitle}
-                        track={this.props.currentTrackpoint}
-                        handleMouseOver={this.props.updateTrackpoint}
-                        data={this.state.bpms} 
-                        laps={this.state.laps}
-                        dataLine={this.state.avg}
-                        width = {this.state.width}
-                        height = {this.state.height}
-                        legend={'bpm'}
-                        padding = {40}
-                        ticks={5}/>
-      </MySizeGrid>
-		);
+		    <MySizeGrid
+                ref={ref=>this.chartGrid = ref} item
+                xs={12} style={{maxHeight:'200px', minWidth:'500px'}}>
+              <BarChart   textYAxis={this.props.yTitle}
+                          textXAxis={this.props.xTitle}
+                          track={this.props.currentTrackpoint}
+                          handleMouseOver={this.props.updateTrackpoint}
+                          data={this.state.bpms}
+                          laps={this.state.laps}
+                          dataLine={this.state.avg}
+                          width = {this.state.width}
+                          height = {this.state.height}
+                          legend={'bpm'}
+                          padding = {40}
+                          ticks={5}/>
+		    </MySizeGrid>
+        );
   }
 
 }

@@ -2,7 +2,6 @@ import React  from 'react';
 import Axis   from './Axis';
 
 export default class XYAxis extends React.Component{
-
   render(){
     const xSettings = {
       translate: `translate(0, ${this.props.height - this.props.padding})`,
@@ -31,5 +30,4 @@ export default class XYAxis extends React.Component{
       <Axis className={'y'} {...ySettings} ticks = {this.props.ticks}/>
     </g>
   }
-
 }

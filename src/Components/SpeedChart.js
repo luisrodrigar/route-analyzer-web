@@ -71,27 +71,24 @@ export class SpeedChart extends React.Component {
     window.removeEventListener("resize", this.handleChangeSizeContent);
   }
 
-	render(){
-		return(
-      <MySizeGrid 
-            ref={ref=>this.chartGrid = ref}
-            item
-            xs={12}
-            style={{maxHeight:'200px', minWidth:'500px'}}>
-            <LineChart  data={this.state.speeds} 
-                        laps={this.state.laps}
-                        dataLine={this.state.avg}
-                        textYAxis={this.props.yTitle}
-                        textXAxis={this.props.xTitle}
-                        padding = {40}
-                        width = {this.state.width}
-                        height = {this.state.height}
-                        track={this.props.currentTrackpoint}
-                        handleMouseOver={this.props.updateTrackpoint}
-                        legend={'m/s'}
-                        ticks={5}/>
-      </MySizeGrid>
-		);
+  render(){
+    return(
+        <MySizeGrid ref={ref=>this.chartGrid = ref} item
+                    xs={12} style={{maxHeight:'200px', minWidth:'500px'}}>
+          <LineChart  data={this.state.speeds}
+                      laps={this.state.laps}
+                      dataLine={this.state.avg}
+                      textYAxis={this.props.yTitle}
+                      textXAxis={this.props.xTitle}
+                      padding = {40}
+                      width = {this.state.width}
+                      height = {this.state.height}
+                      track={this.props.currentTrackpoint}
+                      handleMouseOver={this.props.updateTrackpoint}
+                      legend={'m/s'}
+                      ticks={5}/>
+        </MySizeGrid>
+    );
   }
 
 }
